@@ -1,4 +1,4 @@
-from models.region_position import RegionPosition
+from models.cube_region_position import CubeRegionPosition
 
 
 class RegionService:

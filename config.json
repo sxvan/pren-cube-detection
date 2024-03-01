@@ -1,10 +1,20 @@
 {
   "stream_path": "assets/pren_cube_01.mp4",
-  "regions": {
+  "side_regions": {
+    "upper_left": { "coords": [0, 0], "width": 0, "height": 0 },
+    "lower_left": { "coords": [0, 0], "width": 0, "height": 0 },
+    "upper_right": { "coords": [0, 0], "width": 0, "height": 0 },
+    "lower_right": { "coords": [0, 0], "width": 0, "height": 0 }
+  },
+  "edge_regions": {
     "upper_left": { "coords": [750, 260], "width": 70, "height": 70 },
     "lower_left": { "coords": [750, 410], "width": 70, "height": 50 },
     "upper_right": { "coords": [1100, 260], "width": 70, "height": 70 },
     "lower_right": { "coords": [1100, 410], "width": 70, "height": 50 }
+  },
+  "quadrant_regions": {
+    "right": { "coords": [0, 0], "width": 0, "height": 0 },
+    "right_front": { "coords": [0, 0], "width": 0, "height": 0 }
   },
   "colors": [
     {

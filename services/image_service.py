@@ -20,6 +20,10 @@ class ImageService:
                 if segment_length > threshold:
                     pitch_rad = np.arctan2(y2 - y1, x2 - x1)
                     pitch_deg = np.degrees(pitch_rad)
+                    pitch_deg = pitch_deg % 360
                     angles.append(pitch_deg)
 
+        print(angles)
+        if len(angles) > 1:
+            print(angles[0] - angles[1])
         return angles
