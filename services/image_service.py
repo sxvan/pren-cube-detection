@@ -23,7 +23,4 @@ class ImageService:
                     pitch_deg = pitch_deg % 360
                     angles.append(pitch_deg)
 
-        print(angles)
-        if len(angles) > 1:
-            print(angles[0] - angles[1])
         return angles

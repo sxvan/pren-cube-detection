@@ -1,42 +1,67 @@
 from models.config import Config
 import cv2 as cv
 
+from models.cube_position import CubePosition
 from models.orientation import Orientation
-from services.color_service import ColorService
 from services.cube_service import CubeService
 from services.quadrant_service_deprecated import QuadrantServiceDeprecated
-from services.region_service import RegionService
+
+
+def get_cubes(img, orientation):
+    regions = config.edge_regions
+    if orientation.value % 90 == 0:
+        regions = config.side_regions
+
+    cube_detection_results = cube_service.detect_cubes(
+        img,
+        regions,
+        config.colors,
+        config.min_color_coverage,
+        orientation)
+
+    for cube_detection_result in cube_detection_results:
+        cubes_dict[cube_detection_result.cube_position] = cube_detection_result.color_name
 
 
 config = Config.from_json("config.json")
 
-region_service = RegionService()
-color_service = ColorService()
-
 quadrant_service = QuadrantServiceDeprecated()
 cube_service = CubeService()
 
+cubes_dict = {position: 'undefined' for position in CubePosition}
+
 capture = cv.VideoCapture(config.stream_path)
 
-start_frame = None
+capture.set(1, 109)
+_, frame = capture.read()
+get_cubes(frame, Orientation.LEFT_EDGE)
 
-while not start_frame:
-    ret, frame = capture.read()
+capture.set(1, 219)
+_, frame = capture.read()
+get_cubes(frame, Orientation.FRONT)
 
-    if not ret:
-        break
+capture.set(1, 330)
+_, frame = capture.read()
+get_cubes(frame, Orientation.FRONT_EDGE)
 
+capture.set(1, 444)
+_, frame = capture.read()
+get_cubes(frame, Orientation.RIGHT)
 
-    orientation = quadrant_service.get_orientation(frame)
-    if orientation:
-        cube_service.get_cubes(frame, config.regions, config.colors, config.min_color_coverage, orientation)
+capture.set(1, 560)
+_, frame = capture.read()
+get_cubes(frame, Orientation.RIGHT_EDGE)
 
-    #if quadrant_service.is_start_position(frame):
-     #   start_frame = capture.get(1)
-      #  cube_service.get_cubes(frame, config.regions, config.colors, config.min_color_coverage, Direction.FRONT)
+capture.set(1, 670)
+_, frame = capture.read()
+get_cubes(frame, Orientation.BACK)
 
-#capture.set(1, start_frame + 220)
-#_, frame = capture.read()
-#cube_service.get_cubes(frame, config.regions, config.colors, config.min_color_coverage, Direction.RIGHT)
+capture.set(1, 786)
+_, frame = capture.read()
+get_cubes(frame, Orientation.BACK_EDGE)
 
-#print(cube_service.result)
+capture.set(1, 895)
+_, frame = capture.read()
+get_cubes(frame, Orientation.LEFT)
+
+print(cubes_dict)
