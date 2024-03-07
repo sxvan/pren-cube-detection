@@ -34,4 +34,3 @@ class ColorService:
         result_img = cv.bitwise_and(img, img, mask=mask)
 
         return result_img
-

@@ -13,10 +13,14 @@
     "lower_right": { "coords": [1100, 410], "width": 70, "height": 50 }
   },
   "quadrant_regions": {
-    "upper_left": { "coords": [810, 120], "width": 100, "height": 70 },
-    "lower_left": { "coords": [810, 470], "width": 100, "height": 90 },
-    "upper_right": { "coords": [990, 120], "width": 100, "height": 70 },
-    "lower_right": { "coords": [990, 470], "width": 100, "height": 90 }
+    "right": { "coords": [1515, 475], "width": 100, "height": 70 },
+    "right_front": { "coords": [1460, 815], "width": 100, "height": 90 },
+    "front ": { "coords": [970, 1015], "width": 100, "height": 70 },
+    "front_left": { "coords": [466, 815], "width": 100, "height": 90 },
+    "left": { "coords": [400, 480], "width": 100, "height": 70 },
+    "left_back": { "coords": [635, 260], "width": 100, "height": 90 },
+    "back": { "coords": [955, 190], "width": 100, "height": 70 },
+    "back_right": { "coords": [1290, 260], "width": 100, "height": 90 }
   },
   "colors": [
     {

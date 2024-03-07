@@ -1,8 +1,5 @@
 from services.color_service import ColorService
 
-import cv2
-
-
 class RegionService:
     def get_region_img(self, img, region):
         x1, y1 = region.cords

@@ -65,3 +65,4 @@ _, frame = capture.read()
 get_cubes(frame, Orientation.LEFT)
 
 print(cubes_dict)
+
