@@ -15,8 +15,14 @@
     "top_back_left": { "coords": [915, 90], "width": 100 , "height":  60 }
   },
   "quadrant_regions": {
-    "right": { "coords": [0, 0], "width": 0, "height": 0 },
-    "right_front": { "coords": [0, 0], "width": 0, "height": 0 }
+    "right": { "coords": [1515, 475], "width": 100, "height": 70 },
+    "right_front": { "coords": [1460, 815], "width": 100, "height": 90 },
+    "front": { "coords": [970, 1015], "width": 100, "height": 70 },
+    "front_left": { "coords": [466, 815], "width": 100, "height": 90 },
+    "left": { "coords": [400, 480], "width": 100, "height": 70 },
+    "left_back": { "coords": [635, 260], "width": 100, "height": 90 },
+    "back": { "coords": [955, 190], "width": 100, "height": 70 },
+    "back_right": { "coords": [1290, 260], "width": 100, "height": 90 }
   },
   "colors": [
     {
@@ -33,6 +39,14 @@
     {
       "name": "yellow",
       "color_ranges": [ { "lower_color": [20, 100, 100], "upper_color": [40, 255, 255] } ]
+    },
+    {
+      "name": "white_pause",
+      "color_ranges": [ { "lower_color": [0, 0, 100], "upper_color": [0, 0, 45] } ]
+    },
+    {
+      "name": "white",
+      "color_ranges": [ { "lower_color": [0, 0, 170], "upper_color": [30, 30, 100] } ]
     }
   ],
   "min_color_coverage": 0.7
