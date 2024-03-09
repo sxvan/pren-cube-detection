@@ -1,16 +1,15 @@
 from models.cube_position import CubePosition
-from models.quadrant_region_position import QuadrantRegionPosition
-from typing import Union
 
 
 
 class Region:
-    def __init__(self, position: Union[CubePosition, QuadrantRegionPosition], coords, width, height, when_missing=[]):
-        self.position = position
-        self.cords = tuple(coords)
+    def __init__(self, coord, width, height, min_color_coverage, max_color_coverage=1, when_cubes_missing=[]):
+        self.coord = tuple(coord)
         self.width = width
         self.height = height
+        self.min_color_coverage = min_color_coverage
+        self.max_color_coverage = max_color_coverage
 
-        self.when_missing = []
-        for position in when_missing:
-            self.when_missing.append(CubePosition[position.upper()])
+        self.when_cubes_missing = []
+        for position in when_cubes_missing:
+            self.when_cubes_missing.append(CubePosition[position.upper()])

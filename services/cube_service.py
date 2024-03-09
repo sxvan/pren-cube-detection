@@ -1,36 +1,49 @@
 from models.cube_position import CubePosition
 from models.orientation import Orientation
+from models.region import Region
 from services.region_service import RegionService
 
 
 class CubeService:
-    def detect_cubes(self, img, regions, colors, min_color_coverage, orientation: Orientation):
+    def __init__(self):
+        self.cubes = {position: 'undefined' for position in CubePosition}
+
+    def detect_cubes(self,
+                     img,
+                     cube_side_regions: (CubePosition, Region),
+                     cube_edge_regions: (CubePosition, Region),
+                     colors,
+                     orientation: Orientation):
+        if orientation.value % 90 == 0:
+            cube_regions = cube_side_regions
+        else:
+            cube_regions = cube_edge_regions
+
         cube_detection_results = {}
         region_service = RegionService()
 
-        for region in regions:
-            if not self.check_preconditions(region, cube_detection_results, orientation):
+        for cube_position, region in cube_regions.items():
+            if not self.__check_preconditions(region, cube_detection_results, orientation):
                 break
 
-            color_name = region_service.get_region_color_name(img, region, colors, min_color_coverage)
-            cube_position = self.get_normalized_cube_position(orientation, region.position)
-            cube_detection_results[cube_position] = color_name
+            color_name = region_service.get_region_color_name(img, region, colors)
+            normalized_cube_position = self.__get_normalized_cube_position(orientation, cube_position)
+            cube_detection_results[normalized_cube_position] = color_name
+
+        self.cubes.update(cube_detection_results)
 
         return cube_detection_results
 
-    def check_preconditions(self, region, cube_detection_results, orientation: Orientation):
-        for precondition in region.when_missing:
-            normalized_precondition = self.get_normalized_cube_position(orientation, precondition)
+    def __check_preconditions(self, region, cube_detection_results, orientation: Orientation):
+        for precondition in region.when_cubes_missing:
+            normalized_precondition = self.__get_normalized_cube_position(orientation, precondition)
             color_name = cube_detection_results[normalized_precondition]
-            if color_name is None:
-                return False
-
-            if color_name != '':
+            if color_name is None or color_name != '':
                 return False
 
         return True
 
-    def get_normalized_cube_position(self, orientation: Orientation, cube_position: CubePosition) -> CubePosition:
+    def __get_normalized_cube_position(self, orientation: Orientation, cube_position: CubePosition) -> CubePosition:
         if orientation == Orientation.FRONT_EDGE:
             orientation = Orientation.FRONT
         elif orientation == Orientation.RIGHT_EDGE:

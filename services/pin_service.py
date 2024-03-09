@@ -1,0 +1,2 @@
+class PinService:
+    pass

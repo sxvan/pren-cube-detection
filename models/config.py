@@ -2,28 +2,44 @@ from models.color import Color
 import json
 
 from models.cube_position import CubePosition
-from models.quadrant_region_position import QuadrantRegionPosition
+from models.orientation import Orientation
 from models.region import Region
 
 
 class Config:
-    def __init__(self, stream_path, min_color_coverage, colors, side_regions, edge_regions, quadrant_regions):
-        self.stream_path = stream_path
+    def __init__(self,
+                 video_source,
+                 frame_frequency,
+                 start_signal_pin,
+                 submission_base_url,
+                 team,
+                 datetime_format,
+                 cube_colors,
+                 quadrant_colors,
+                 side_regions,
+                 edge_regions,
+                 quadrant_regions):
+        self.video_source = video_source
+        self.frame_frequency = frame_frequency
+        self.start_signal_pin = start_signal_pin
+        self.submission_base_url = submission_base_url
+        self.team = team
+        self.datetime_format = datetime_format
 
-        self.side_regions = []
+        self.side_regions: (CubePosition, Region) = {}
         for position, region in side_regions.items():
-            self.side_regions.append(Region(position=CubePosition[position.upper()], **region))
+            self.side_regions[CubePosition[position.upper()]] = Region(**region)
 
-        self.edge_regions = []
+        self.edge_regions: (CubePosition, Region) = {}
         for position, region in edge_regions.items():
-            self.edge_regions.append(Region(position=CubePosition[position.upper()], **region))
+            self.edge_regions[CubePosition[position.upper()]] = Region(**region)
 
-        self.quadrant_regions = []
-        for position, region in quadrant_regions.items():
-            self.quadrant_regions.append(Region(position=QuadrantRegionPosition[position.upper()], **region))
+        self.quadrant_regions: (Orientation, [Region]) = {}
+        for position, regions in quadrant_regions.items():
+            self.quadrant_regions[Orientation[position.upper()]] = [Region(**region) for region in regions]
 
-        self.min_color_coverage = min_color_coverage
-        self.colors = [Color(**color) for color in colors]
+        self.cube_colors = [Color(**color) for color in cube_colors]
+        self.quadrant_colors = [Color(**color) for color in quadrant_colors]
 
     @classmethod
     def from_json(cls, json_file_path):
