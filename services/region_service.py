@@ -2,11 +2,12 @@ from services.color_service import ColorService
 
 
 class RegionService:
-    def get_region_color_name(self, img, region, colors):
-        color_service = ColorService()
+    def __init__(self, color_service: ColorService):
+        self.color_service = color_service
 
+    def get_region_color_name(self, img, region, colors):
         region_img = self.__get_region_img(img, region)
-        color = color_service.get_color(region_img, colors, region.min_color_coverage, region.max_color_coverage)
+        color = self.color_service.get_color(region_img, colors, region.min_color_coverage, region.max_color_coverage)
         name = ''
         if color:
             name = color.name

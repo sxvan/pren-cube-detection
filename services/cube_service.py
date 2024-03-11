@@ -5,7 +5,8 @@ from services.region_service import RegionService
 
 
 class CubeService:
-    def __init__(self):
+    def __init__(self, region_service: RegionService):
+        self.region_service = region_service
         self.cubes = {position: 'undefined' for position in CubePosition}
 
     def detect_cubes(self,
@@ -20,13 +21,12 @@ class CubeService:
             cube_regions = cube_edge_regions
 
         cube_detection_results = {}
-        region_service = RegionService()
 
         for cube_position, region in cube_regions.items():
-            if not self.__check_preconditions(region, cube_detection_results, orientation):
-                break
+            # if not self.__check_preconditions(region, cube_detection_results, orientation):
+            #     break
 
-            color_name = region_service.get_region_color_name(img, region, colors)
+            color_name = self.region_service.get_region_color_name(img, region, colors)
             normalized_cube_position = self.__get_normalized_cube_position(orientation, cube_position)
             cube_detection_results[normalized_cube_position] = color_name
 
@@ -34,14 +34,14 @@ class CubeService:
 
         return cube_detection_results
 
-    def __check_preconditions(self, region, cube_detection_results, orientation: Orientation):
-        for precondition in region.when_cubes_missing:
-            normalized_precondition = self.__get_normalized_cube_position(orientation, precondition)
-            color_name = cube_detection_results[normalized_precondition]
-            if color_name is None or color_name != '':
-                return False
-
-        return True
+    # def __check_preconditions(self, region, cube_detection_results, orientation: Orientation):
+    #     for precondition in region.when_cubes_missing:
+    #         normalized_precondition = self.__get_normalized_cube_position(orientation, precondition)
+    #         color_name = cube_detection_results[normalized_precondition]
+    #         if color_name is None or color_name != '':
+    #             return False
+    #
+    #     return True
 
     def __get_normalized_cube_position(self, orientation: Orientation, cube_position: CubePosition) -> CubePosition:
         if orientation == Orientation.FRONT_EDGE:
