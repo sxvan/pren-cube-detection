@@ -8,7 +8,7 @@ class RegionService:
     def get_region_color_name(self, img, region, colors):
         region_img = self.__get_region_img(img, region)
         color = self.color_service.get_color(region_img, colors, region.min_color_coverage, region.max_color_coverage)
-        name = ''
+        name = 'X'
         if color:
             name = color.name
 

@@ -7,7 +7,7 @@ from services.region_service import RegionService
 class CubeService:
     def __init__(self, region_service: RegionService):
         self.region_service = region_service
-        self.cubes = {position: 'undefined' for position in CubePosition}
+        self.cubes = {position: '?' for position in CubePosition}
 
     def detect_cubes(self,
                      img,
@@ -23,9 +23,6 @@ class CubeService:
         cube_detection_results = {}
 
         for cube_position, region in cube_regions.items():
-            # if not self.__check_preconditions(region, cube_detection_results, orientation):
-            #     break
-
             color_name = self.region_service.get_region_color_name(img, region, colors)
             normalized_cube_position = self.__get_normalized_cube_position(orientation, cube_position)
             cube_detection_results[normalized_cube_position] = color_name
@@ -33,15 +30,6 @@ class CubeService:
         self.cubes.update(cube_detection_results)
 
         return cube_detection_results
-
-    # def __check_preconditions(self, region, cube_detection_results, orientation: Orientation):
-    #     for precondition in region.when_cubes_missing:
-    #         normalized_precondition = self.__get_normalized_cube_position(orientation, precondition)
-    #         color_name = cube_detection_results[normalized_precondition]
-    #         if color_name is None or color_name != '':
-    #             return False
-    #
-    #     return True
 
     def __get_normalized_cube_position(self, orientation: Orientation, cube_position: CubePosition) -> CubePosition:
         if orientation == Orientation.FRONT_EDGE:
