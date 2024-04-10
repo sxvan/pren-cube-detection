@@ -1,8 +1,6 @@
 import serial
 from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
-from models.cube_position import CubePosition
-
 
 class ControlUnitService:
     def __init__(self, ready_pin: DigitalOutputDevice, start_pin: DigitalInputDevice, uart_port, baud_rate, encoding,
@@ -21,15 +19,14 @@ class ControlUnitService:
     def send_ready_signal(self):
         self.__ready_pin.on()
 
+    def send_unready_signal(self):
+        self.__ready_pin.off()
+
     def wait_for_start_signal(self):
         self.__start_pin.wait_for_active()
 
     def wait_for_end_signal(self):
         self.__start_pin.wait_for_inactive()
-
-    def close_pins(self):
-        self.__ready_pin.close()
-        self.__start_pin.close()
 
     # def send_cube_config(self, orientation, cube_config: (CubePosition, str)):
     #
@@ -44,7 +41,7 @@ class ControlUnitService:
     #     # ser.write(data_bytes)
     #
     #     # received_data = ser.readline()
-
+    #
     # def __get_crc8(self, data):
     #     crc = 0
     #     for byte in data:
@@ -66,7 +63,3 @@ class ControlUnitService:
             data += color[0].upper()
 
         return data
-
-
-    def __del__(self):
-        self.close_pins()
