@@ -53,6 +53,7 @@ def main():
 
     # control_unit_service.send_ready_signal()
     # control_unit_service.wait_for_start_signal()
+    # ready signal to low
     # pren_service.start()
 
     capture = cv.VideoCapture('assets/pren_cube_01.mp4')

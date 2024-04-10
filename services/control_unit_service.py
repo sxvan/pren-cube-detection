@@ -5,10 +5,11 @@ from models.cube_position import CubePosition
 
 
 class ControlUnitService:
-    def __init__(self, ready_pin, start_pin, uart_port, baud_rate, encoding, max_retries, retry_delay_ms,
+    def __init__(self, ready_pin: DigitalOutputDevice, start_pin: DigitalInputDevice, uart_port, baud_rate, encoding,
+                 max_retries, retry_delay_ms,
                  start_character, crc8_poly):
-        self.__ready_pin = DigitalOutputDevice(ready_pin)
-        self.__start_pin = DigitalInputDevice(start_pin)
+        self.__ready_pin = ready_pin
+        self.__start_pin = start_pin
         self.__uart_port = uart_port
         self.__baud_rate = baud_rate
         self.__encoding = encoding

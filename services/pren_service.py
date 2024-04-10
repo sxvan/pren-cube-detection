@@ -34,6 +34,7 @@ class PrenService:
     def end(self):
         url = self.__get_url() + '/end'
         headers = self.__get_headers()
+
         response = requests.post(url, headers=headers)
         return response
 

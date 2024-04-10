@@ -23,7 +23,8 @@
       "max_retries": 5,
       "retry_delay_ms": 200,
       "start_character": "@",
-      "crc8_poly": 151
+      "crc8_poly": 151,
+      "ack_character": "A"
     }
   },
   "cubes": {

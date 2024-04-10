@@ -16,4 +16,3 @@
 #
 #         # Assert that result is of type Orientation
 #         assert isinstance(result, Orientation.FRONT)
-
