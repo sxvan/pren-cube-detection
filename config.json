@@ -17,14 +17,15 @@
     "ready_pin": 1,
     "start_pin": 1,
     "uart": {
-      "port": "/dev/ttyS0",
+      "port": "/dev/serial0",
       "baud_rate": 19200,
       "encoding": "utf-8",
       "max_retries": 5,
       "retry_delay_ms": 200,
       "start_character": "@",
       "crc8_poly": 151,
-      "ack_character": "A"
+      "ack_character": "A",
+      "not_ack_character": "N"
     }
   },
   "cubes": {
