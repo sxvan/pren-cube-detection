@@ -1,12 +1,26 @@
 from time import sleep
 
-from gpiozero import DigitalOutputDevice
+from gpiozero import DigitalOutputDevice, DigitalInputDevice
 import serial
 
 if __name__ == '__main__':
-    pin1 = DigitalOutputDevice(23)
+    ready = DigitalOutputDevice(23)
+    start = DigitalInputDevice(24)
 
+    start.wait_for_active()
     while True:
-        pin1.toggle()
+        if start.value:
+            ready.toggle()
         sleep(0.2)
+
+
+
+    #
+    # ser = serial.Serial("/dev/serial0", 19200, timeout=0.2)
+    # while True:
+    #     ser.write("ABC".encode("ascii"))
+    #     sleep(1)
+
+
+
 

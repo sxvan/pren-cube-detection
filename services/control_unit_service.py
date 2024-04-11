@@ -32,7 +32,7 @@ class ControlUnitService:
 
     def send_cube_config(self, orientation, cube_config: (CubePosition, str)):
 
-        ser = serial.Serial(self.__uart_port, self.__baud_rate, timeout=self.__retry_delay_ms * 1000)
+        ser = serial.Serial(self.__uart_port, self.__baud_rate, timeout=self.__retry_delay_ms / 1000)
         data = self.__get_data_string(cube_config)
         data = self.__start_character + data
         data_bytes = data.encode(self.__encoding)
