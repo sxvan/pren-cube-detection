@@ -8,8 +8,8 @@ if __name__ == '__main__':
     start = DigitalOutputDevice(24)
 
     while True:
-        if start.value:
-            ready.toggle()
+        #if start.value:
+        ready.toggle()
         sleep(0.2)
 
 
