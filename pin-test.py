@@ -5,9 +5,8 @@ import serial
 
 if __name__ == '__main__':
     ready = DigitalOutputDevice(23)
-    start = DigitalInputDevice(24)
+    start = DigitalOutputDevice(24)
 
-    start.wait_for_active()
     while True:
         if start.value:
             ready.toggle()
