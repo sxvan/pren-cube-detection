@@ -9,12 +9,16 @@ if __name__ == '__main__':
     ser = serial.Serial("/dev/ttyS0", 19200, timeout=0.2)
 
     while True:
-        if start.value:
-            ready.toggle()
-            sleep(0.2)
+        # if start.value:
+        #     ready.toggle()
+        #     sleep(0.2)
 
         if ser.in_waiting > 0:
             data = ser.read(1)
+            if data.decode("ascii") == "A":
+                ready.on()
+            elif data.decode("ascii") == "N":
+                ready.off()
             ser.write(data)
 
 
