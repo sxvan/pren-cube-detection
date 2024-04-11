@@ -11,8 +11,12 @@ if __name__ == '__main__':
     while True:
         if start.value:
             ready.toggle()
-            ser.write("@ABC".encode("ascii"))
-        sleep(0.2)
+            sleep(0.2)
+
+        if ser.in_waiting > 0:
+            data = ser.read(1)
+            ser.write(data)
+
 
 
 
