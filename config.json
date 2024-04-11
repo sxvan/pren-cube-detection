@@ -14,8 +14,8 @@
     "datetime_format": "%Y-%m-%d %H:%M:%S"
   },
   "control_unit": {
-    "ready_pin": 1,
-    "start_pin": 1,
+    "ready_pin": 23,
+    "start_pin": 24,
     "uart": {
       "port": "/dev/serial0",
       "baud_rate": 19200,
