@@ -1,11 +1,11 @@
 from time import sleep
 
-from gpiozero import DigitalOutputDevice, DigitalInputDevice
+from gpiozero import DigitalOutputDevice, DigitalInputDevice, InputDevice
 import serial
 
 if __name__ == '__main__':
     ready = DigitalOutputDevice(23)
-    start = DigitalOutputDevice(24)
+    start = InputDevice(24)
 
     while True:
         #if start.value:
