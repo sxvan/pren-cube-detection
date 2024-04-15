@@ -13,7 +13,7 @@ class QuadrantService:
             color_not_found_in_all_regions = False
             for region in regions:
                 color_name = self.region_service.get_region_color_name(img, region, colors)
-                if color_name == 'X':
+                if color_name == '':
                     color_not_found_in_all_regions = True
                     break
 

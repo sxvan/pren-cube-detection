@@ -9,17 +9,17 @@
     "profile": "pren_profile_small"
   },
   "pren_api": {
-    "base_url": "http://52.58.217.104:5000",
-    "team": "04",
+    "base_url": "https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com",
+    "team": "00",
     "datetime_format": "%Y-%m-%d %H:%M:%S"
   },
   "control_unit": {
-    "ready_pin": 23,
-    "start_pin": 24,
+    "ready_pin": 24,
+    "start_pin": 23,
     "uart": {
-      "port": "/dev/serial0",
+      "port": "/dev/ttyS0",
       "baud_rate": 19200,
-      "encoding": "utf-8",
+      "encoding": "ascii",
       "max_retries": 5,
       "retry_delay_ms": 200,
       "start_character": "@",

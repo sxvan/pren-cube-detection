@@ -43,7 +43,7 @@ def main():
     region_service = RegionService(color_service)
     quadrant_service = QuadrantService(region_service)
     cube_service = CubeService(region_service)
-    # pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
+    pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
     # control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
     #                                           config.control_unit.uart.port, config.control_unit.uart.baud_rate,
     #                                           config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
@@ -54,7 +54,7 @@ def main():
     # control_unit_service.send_ready_signal()
     # control_unit_service.wait_for_start_signal()
     # control_unit_service.send_unready_signal()
-    # pren_service.start()
+    pren_service.start()
 
     capture = cv.VideoCapture('assets/pren_cube_01.mp4')
 
@@ -80,7 +80,7 @@ def main():
             changed_cubes = get_changed_cubes(cubes, current_cubes)
             cubes.update(current_cubes)
             print(orientation, changed_cubes)
-            # control_unit_service.send_cube_config(orientation, cube_service.cubes)
+            # control_unit_service.send_cube_config(cube_service.cubes)
 
             if is_cubes_complete(cubes):
                 break
@@ -93,12 +93,12 @@ def main():
             if not capture.grab():
                 break
 
-    print(cube_service.cubes)
-
     # control_unit_service.wait_for_end_signal()
-    # pren_service.end()
+    pren_service.submit(cube_service.cubes)
+    pren_service.end()
+    print(pren_service.get().content)
 
 
 if __name__ == '__main__':
-    while True:
-        main()
+    # while True:
+    main()

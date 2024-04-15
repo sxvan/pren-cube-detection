@@ -38,12 +38,19 @@ class PrenService:
         response = requests.post(url, headers=headers)
         return response
 
+    def get(self):
+        url = self.__get_url()
+        headers = self.__get_headers()
+
+        response = requests.get(url, headers=headers)
+        return response
+
     def __get_url(self):
         return f'{self.__pren_api_base_url}/cubes/team{self.__team}'
 
     def __get_headers(self):
         return {
             'Content-Type': 'application/json',
-            'Auth': 'test1234'
+            'Auth': 'aTdpCRIrI9CLS1'
         }
 
