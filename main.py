@@ -44,16 +44,16 @@ def main():
     quadrant_service = QuadrantService(region_service)
     cube_service = CubeService(region_service)
     # pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
-    control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
-                                              config.control_unit.uart.port, config.control_unit.uart.baud_rate,
-                                              config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
-                                              config.control_unit.uart.retry_delay_ms,
-                                              config.control_unit.uart.start_character,
-                                              config.control_unit.uart.crc8_poly)
+    # control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
+    #                                           config.control_unit.uart.port, config.control_unit.uart.baud_rate,
+    #                                           config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
+    #                                           config.control_unit.uart.retry_delay_ms,
+    #                                           config.control_unit.uart.start_character,
+    #                                           config.control_unit.uart.crc8_poly)
 
-    control_unit_service.send_ready_signal()
-    control_unit_service.wait_for_start_signal()
-    control_unit_service.send_unready_signal()
+    # control_unit_service.send_ready_signal()
+    # control_unit_service.wait_for_start_signal()
+    # control_unit_service.send_unready_signal()
     # pren_service.start()
 
     capture = cv.VideoCapture('assets/pren_cube_01.mp4')
@@ -95,7 +95,7 @@ def main():
 
     print(cube_service.cubes)
 
-    control_unit_service.wait_for_end_signal()
+    # control_unit_service.wait_for_end_signal()
     # pren_service.end()
 
 
