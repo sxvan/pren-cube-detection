@@ -37,7 +37,7 @@ def main():
 
         return positions.issubset(cubes_keys)
 
-    config = Config.from_json('config.json')
+    config = Config.from_json('config_new.json')
 
     color_service = ColorService()
     region_service = RegionService(color_service)
@@ -56,12 +56,14 @@ def main():
     # control_unit_service.send_unready_signal()
     pren_service.start()
 
-    capture = cv.VideoCapture('assets/pren_cube_01.mp4')
+    # capture = cv.VideoCapture('assets/pren_cube_01.mp4')
 
-    # camera_profile = config.camera_profile
-    # capture = cv.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
-    #                           f'@{camera_profile.ip_address}/{camera_profile.url}'
-    #                           f'?streamprofile={camera_profile.profile}')
+    camera_profile = config.camera_profile
+    capture = cv.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
+                              f'@{camera_profile.ip_address}/{camera_profile.url}'
+                              f'?streamprofile={camera_profile.profile}')
+    print(capture.get(cv.CAP_PROP_FRAME_COUNT))
+
     frame_count = 0
     cubes = {}
 
@@ -96,7 +98,7 @@ def main():
     # control_unit_service.wait_for_end_signal()
     pren_service.submit(cube_service.cubes)
     pren_service.end()
-    print(pren_service.get().content)
+    # print(pren_service.get().content)
 
 
 if __name__ == '__main__':

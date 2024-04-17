@@ -1,0 +1,103 @@
+{
+  "frame_frequency": 3,
+  "camera_profile": {
+    "protocol": "rtsp",
+    "ip_address": "147.88.48.131",
+    "url": "/axis-media/media.amp",
+    "username": "pren",
+    "password": "463997",
+    "profile": "pren_profile_small"
+  },
+  "pren_api": {
+    "base_url": "https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com",
+    "team": "00",
+    "datetime_format": "%Y-%m-%d %H:%M:%S"
+  },
+  "control_unit": {
+    "ready_pin": 24,
+    "start_pin": 23,
+    "uart": {
+      "port": "/dev/ttyS0",
+      "baud_rate": 19200,
+      "encoding": "ascii",
+      "max_retries": 5,
+      "retry_delay_ms": 200,
+      "start_character": "@",
+      "crc8_poly": 151,
+      "ack_character": "A",
+      "not_ack_character": "N"
+    }
+  },
+  "cubes": {
+    "side_regions": {
+      "top_back_left": { "coord": [279, 62], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "top_back_right": { "coord": [343, 62], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_front_left": { "coord": [282, 201], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_front_right": { "coord": [339, 201], "width": 20, "height": 20, "min_color_coverage": 0.7 }
+    },
+    "edge_regions": {
+      "top_front_left": { "coord": [238, 101], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_front_left": { "coord": [241, 167], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "top_back_right": { "coord": [381, 104], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_back_right": { "coord": [378, 159], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_front_right": { "coord": [319, 211], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "top_back_left": { "coord": [307, 46], "width": 20 , "height":  20, "min_color_coverage": 0.7 }
+    },
+    "colors": [
+    {
+      "name": "red",
+      "color_ranges": [
+        { "lower_color": [0, 100, 100], "upper_color": [10, 255, 255] },
+        { "lower_color": [160, 100, 100], "upper_color": [180, 255, 255] }
+      ]
+    },
+    {
+      "name": "blue",
+      "color_ranges": [ { "lower_color": [100, 50, 50], "upper_color": [130, 255, 255] } ]
+    },
+    {
+      "name": "yellow",
+      "color_ranges": [ { "lower_color": [20, 100, 100], "upper_color": [40, 255, 255] } ]
+    }]
+  },
+  "quadrant": {
+    "regions": {
+      "front": [
+        { "coord": [310, 310], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [122, 170], "width": 20, "height": 20, "min_color_coverage": 0.3 }
+      ],
+      "front_edge": [
+        { "coord": [162, 268], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [197, 100], "width": 20, "height": 20, "min_color_coverage": 0.3 }
+      ],
+      "right": [
+        { "coord": [127, 166], "width": 20, "height": 20, "min_color_coverage": 0.3, "max_color_coverage": 0.5 },
+        { "coord": [225, 93], "width": 20, "height": 20, "min_color_coverage": 0.3 }
+      ],
+      "right_edge": [
+        { "coord": [196, 96], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [423, 104], "width": 20, "height": 20, "min_color_coverage": 0.3 }
+      ],
+      "back": [
+        { "coord": [483, 178], "width": 20, "height": 20, "min_color_coverage": 0.3, "max_color_coverage": 0.5 },
+        { "coord": [400, 97], "width": 20, "height": 20, "min_color_coverage": 0.8 }
+      ],
+      "back_edge": [
+        { "coord": [460, 258], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [409, 98], "width": 20, "height": 20, "min_color_coverage": 0.3 }
+      ],
+      "left": [
+        { "coord": [314, 315], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [487, 176], "width": 20, "height": 20, "min_color_coverage": 0.3 }
+      ],
+      "left_edge": [
+        { "coord": [179, 272], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [460, 259], "width": 20, "height": 20, "min_color_coverage": 0.3 }
+      ]
+    },
+    "colors": [{
+      "name": "gray",
+      "color_ranges": [ { "lower_color": [0, 0, 200], "upper_color": [179, 50, 255] } ]
+    }]
+  }
+}

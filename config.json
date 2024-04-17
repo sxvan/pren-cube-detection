@@ -1,5 +1,5 @@
 {
-  "frame_frequency": 1,
+  "frame_frequency": 5,
   "camera_profile": {
     "protocol": "rtsp",
     "ip_address": "147.88.48.131",
