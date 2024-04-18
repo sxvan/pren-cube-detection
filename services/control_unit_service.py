@@ -60,6 +60,8 @@ class ControlUnitService:
 
     def __get_crc8(self, data):
         crc = data[0]
+        data = bytearray(data)
+        data.append(0)
         for byte in data[1:]:
             for _ in range(8):  # Iterate over the bits in each byte
                 if crc & 0x80:  # Check if MSB of CRC is set
