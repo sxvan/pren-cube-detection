@@ -62,7 +62,6 @@ def main():
     capture = cv.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
                               f'@{camera_profile.ip_address}/{camera_profile.url}'
                               f'?streamprofile={camera_profile.profile}')
-    print(capture.get(cv.CAP_PROP_FRAME_COUNT))
 
     frame_count = 0
     cubes = {}
