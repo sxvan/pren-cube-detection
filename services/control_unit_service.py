@@ -63,13 +63,14 @@ class ControlUnitService:
         data = bytearray(data)
         data.append(0)
         for byte in data[1:]:
-            for _ in range(8):  # Iterate over the bits in each byte
+            for i in range(8):  # Iterate over the bits in each byte
                 if crc & 0x80:  # Check if MSB of CRC is set
-                    # Shift CRC left, append next bit of data, and XOR with polynomial
-                    crc = ((crc << 1) | (byte >> 7)) ^ self.__crc8_poly
+                    crc <<= 1
+                    crc |= 0x01 & (byte >> (7 - i))
+                    crc ^= self.__crc8_poly
                 else:
-                    # Shift CRC left and append next bit of data
-                    crc = (crc << 1) | (byte >> 7)
+                    crc <<= 1
+                    crc |= 0x01 & (byte >> (7 - i))
             crc &= 0xFF  # Ensure CRC is 8 bits long
         return bytes([crc])
 
