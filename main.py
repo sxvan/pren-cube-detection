@@ -45,18 +45,18 @@ def main():
     region_service = RegionService(color_service)
     quadrant_service = QuadrantService(region_service)
     cube_service = CubeService(region_service)
-    pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
-    control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
-                                              config.control_unit.uart.port, config.control_unit.uart.baud_rate,
-                                              config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
-                                              config.control_unit.uart.retry_delay_ms,
-                                              config.control_unit.uart.start_character,
-                                              config.control_unit.uart.crc8_poly)
+    # pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
+    # control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
+    #                                           config.control_unit.uart.port, config.control_unit.uart.baud_rate,
+    #                                           config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
+    #                                           config.control_unit.uart.retry_delay_ms,
+    #                                           config.control_unit.uart.start_character,
+    #                                           config.control_unit.uart.crc8_poly)
 
     # control_unit_service.send_ready_signal()
     # control_unit_service.wait_for_start_signal()
     # control_unit_service.send_unready_signal()
-    pren_service.start()
+    # pren_service.start()
 
     camera_profile = config.camera_profile
     capture = cv.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
@@ -65,8 +65,6 @@ def main():
 
     frame_count = 0
     cubes = {}
-    fps = capture.get(cv.CAP_PROP_FPS)
-    frame_interval = 1 / fps
 
     start_time = None
 
@@ -91,7 +89,7 @@ def main():
 
                 current_cubes = get_cubes(frame, orientation)
                 cubes.update(current_cubes)
-                # print(orientation, cube_service.cubes)
+                print(orientation, cube_service.cubes)
                 # control_unit_service.send_cube_config(cube_service.cubes)
 
                 if is_cubes_complete(cubes):
@@ -122,11 +120,12 @@ def main():
     print('Diff processing time and read time: ', processing_time - read_time)
     print('Diff processing time and read time per frame: ', processing_time / len(processing_times) - read_time / len(read_times))
 
+    print(cube_service.cubes)
     # pren_service.submit(cube_service.cubes)
     # # control_unit_service.wait_for_end_signal()
     # pren_service.end()
 
 
 if __name__ == '__main__':
-    while True:
-        main()
+    # while True:
+    main()
