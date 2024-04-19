@@ -25,13 +25,13 @@ def main():
             config.cubes.colors,
             orientation)
 
-    def get_changed_cubes(previous_cubes, current_cubes):
-        changed_cubes = {}
-        for position, color in current_cubes.items():
-            if position not in previous_cubes:
-                changed_cubes[position] = color
-
-        return changed_cubes
+    # def get_changed_cubes(previous_cubes, current_cubes):
+    #     changed_cubes = {}
+    #     for position, color in current_cubes.items():
+    #         if position not in previous_cubes:
+    #             changed_cubes[position] = color
+    #
+    #     return changed_cubes
 
     def is_cubes_complete(cubes):
         positions = set(position for position in CubePosition)
@@ -58,8 +58,6 @@ def main():
     # control_unit_service.send_unready_signal()
     pren_service.start()
 
-    # capture = cv.VideoCapture('assets/pren_cube_01.mp4')
-
     camera_profile = config.camera_profile
     capture = cv.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
                               f'@{camera_profile.ip_address}/{camera_profile.url}'
@@ -67,49 +65,53 @@ def main():
 
     frame_count = 0
     cubes = {}
-
     fps = capture.get(cv.CAP_PROP_FPS)
-    print(fps)
+    frame_interval = 1 / fps
 
-    start_time = time.time()
+    start_time = None
+
+    processing_times = []
     while True:
-        frame_count += 1
-        if frame_count % config.frame_frequency == 0:
-            grabbed, frame = capture.read()
-            if not grabbed:
-                break
-
-            orientation = get_orientation(frame)
-            if orientation is None:
-                continue
-
-            current_cubes = get_cubes(frame, orientation)
-            # changed_cubes = get_changed_cubes(cubes, current_cubes)
-            cubes.update(current_cubes)
-            # print(orientation, cube_service.cubes)
-            print(orientation)
-            end_time = time.time()
-            time_elapsed = end_time - start_time
-            if time_elapsed > 4:
-                print(time_elapsed)
+        try:
             start_time = time.time()
-            # control_unit_service.send_cube_config(cube_service.cubes)
 
-            if is_cubes_complete(cubes):
-                break
+            frame_count += 1
+            if frame_count % config.frame_frequency == 0:
+                grabbed, frame = capture.read()
+                if not grabbed:
+                    break
 
-            config.quadrant.regions.pop(orientation)  # also remove orientations that look at same cube positions?
+                orientation = get_orientation(frame)
+                if orientation is None:
+                    continue
 
-            if len(config.quadrant.regions) < 1:
-                break
-        else:
-            if not capture.grab():
-                break
+                current_cubes = get_cubes(frame, orientation)
+                cubes.update(current_cubes)
+                print(orientation, cube_service.cubes)
+                # control_unit_service.send_cube_config(cube_service.cubes)
 
-    # control_unit_service.wait_for_end_signal()
-    pren_service.submit(cube_service.cubes)
-    pren_service.end()
-    # print(pren_service.get().content)
+                if is_cubes_complete(cubes):
+                    break
+
+                config.quadrant.regions.pop(orientation)  # also remove orientations that look at same cube positions?
+
+                if len(config.quadrant.regions) < 1:
+                    break
+            else:
+                if not capture.grab():
+                    break
+        finally:
+            end_time = time.time()  # Record end time
+            processing_time = end_time - start_time
+
+            if processing_time > frame_interval:
+                processing_times.append(processing_time - frame_interval)
+
+    print(sum(processing_times))
+
+    # pren_service.submit(cube_service.cubes)
+    # # control_unit_service.wait_for_end_signal()
+    # pren_service.end()
 
 
 if __name__ == '__main__':
