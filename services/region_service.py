@@ -15,8 +15,8 @@ class RegionService:
         return name
 
     def __get_region_img(self, img, region):
-        x1 = int(region.coord[0] - region.width / 2)
-        y1 = int(region.coord[1] - region.height / 2)
+        x1 = int((region.coord[0] - region.width / 2))
+        y1 = int((region.coord[1] - region.height / 2))
         x2 = int(x1 + region.width)
         y2 = int(y1 + region.height)
 

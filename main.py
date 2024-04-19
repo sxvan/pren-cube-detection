@@ -71,13 +71,17 @@ def main():
     start_time = None
 
     processing_times = []
+    read_times = []
     while True:
         try:
             start_time = time.time()
 
             frame_count += 1
             if frame_count % config.frame_frequency == 0:
+                start_read = time.time()
                 grabbed, frame = capture.read()
+                end_read = time.time()
+                read_times.append(end_read - start_read)
                 if not grabbed:
                     break
 
@@ -87,7 +91,7 @@ def main():
 
                 current_cubes = get_cubes(frame, orientation)
                 cubes.update(current_cubes)
-                print(orientation, cube_service.cubes)
+                # print(orientation, cube_service.cubes)
                 # control_unit_service.send_cube_config(cube_service.cubes)
 
                 if is_cubes_complete(cubes):
@@ -103,11 +107,20 @@ def main():
         finally:
             end_time = time.time()  # Record end time
             processing_time = end_time - start_time
+            processing_times.append(processing_time)
 
-            if processing_time > frame_interval:
-                processing_times.append(processing_time - frame_interval)
+    processing_time = sum(processing_times)
+    read_time = sum(read_times)
+    # perfect_time = 1 / 25 * len(processing_times)
 
-    print(sum(processing_times))
+    print('Processing time', processing_time)
+    print('Read time: ', read_time)
+
+    print('Avg processing time per frame: ', processing_time / len(processing_times))
+    print('Avg read time per frame: ', read_time / len(read_times))
+
+    print('Diff processing time and read time: ', processing_time - read_time)
+    print('Diff processing time and read time per frame: ', processing_time / len(processing_times) - read_time / len(read_times))
 
     # pren_service.submit(cube_service.cubes)
     # # control_unit_service.wait_for_end_signal()
