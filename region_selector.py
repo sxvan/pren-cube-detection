@@ -20,7 +20,7 @@ def main():
     def get_orientation(img):
         return quadrant_service.get_orientation(img, config.quadrant.regions, config.quadrant.colors)
 
-    config = Config.from_json('config_new_new.json')
+    config = Config.from_json('config.json')
 
     color_service = ColorService()
     region_service = RegionService(color_service)

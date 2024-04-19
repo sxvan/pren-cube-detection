@@ -74,7 +74,8 @@ class ControlUnitService:
             crc &= 0xFF  # Ensure CRC is 8 bits long
         return bytes([crc])
 
-    def __get_data_string(self, cube_dict):
+    @staticmethod
+    def __get_data_string(cube_dict):
         sorted_cube_values = [cube_dict[key] for key in sorted(cube_dict.keys(), key=lambda x: x.value)]
 
         data = ''

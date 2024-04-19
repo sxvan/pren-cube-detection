@@ -1,5 +1,5 @@
 {
-  "frame_frequency": 5,
+  "frame_frequency": 1,
   "camera_profile": {
     "protocol": "rtsp",
     "ip_address": "147.88.48.131",
@@ -30,25 +30,25 @@
   },
   "cubes": {
     "side_regions": {
-      "top_back_left": { "coord": [810, 120], "width": 100, "height": 70, "min_color_coverage": 0.7 },
-      "top_back_right": { "coord": [990, 120], "width": 100, "height": 70, "min_color_coverage": 0.7 },
-      "bottom_front_left": { "coord": [810, 470], "width": 100, "height": 90, "min_color_coverage": 0.7 },
-      "bottom_front_right": { "coord": [990, 470], "width": 100, "height": 90, "min_color_coverage": 0.7 }
+      "top_back_left": { "coord": [291, 64], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "top_back_right": { "coord": [353, 61], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_front_left": { "coord": [295, 203], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_front_right": { "coord": [358, 203], "width": 20, "height": 20, "min_color_coverage": 0.7 }
     },
     "edge_regions": {
-      "top_front_left": { "coord": [750, 260], "width": 70, "height": 70, "min_color_coverage": 0.7 },
-      "bottom_front_left": { "coord": [750, 410], "width": 70, "height": 50, "min_color_coverage": 0.7 },
-      "top_back_right": { "coord": [1100, 260], "width": 70, "height": 70, "min_color_coverage": 0.7 },
-      "bottom_back_right": { "coord": [1100, 410], "width": 70, "height": 50, "min_color_coverage": 0.7 },
-      "bottom_front_right": { "coord": [915, 515], "width": 100, "height": 50, "min_color_coverage": 0.7 },
-      "top_back_left": { "coord": [915, 90], "width": 100 , "height":  60, "min_color_coverage": 0.7 }
+      "top_front_left": { "coord": [248, 106], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_front_left": { "coord": [255, 164], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "top_back_right": { "coord": [400, 109], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_back_right": { "coord": [386, 176], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "bottom_front_right": { "coord": [327, 215], "width": 20, "height": 20, "min_color_coverage": 0.7 },
+      "top_back_left": { "coord": [324, 53], "width": 20 , "height":  20, "min_color_coverage": 0.7 }
     },
     "colors": [
     {
       "name": "red",
       "color_ranges": [
-        { "lower_color": [0, 100, 100], "upper_color": [10, 255, 255] },
-        { "lower_color": [160, 100, 100], "upper_color": [180, 255, 255] }
+        { "lower_color": [0, 100, 50], "upper_color": [10, 255, 255] },
+        { "lower_color": [160, 100, 50], "upper_color": [180, 255, 255] }
       ]
     },
     {
@@ -57,47 +57,47 @@
     },
     {
       "name": "yellow",
-      "color_ranges": [ { "lower_color": [20, 100, 100], "upper_color": [40, 255, 255] } ]
+      "color_ranges": [ { "lower_color": [20, 100, 50], "upper_color": [40, 255, 255] } ]
     }]
   },
   "quadrant": {
     "regions": {
       "front": [
-        { "coord": [919, 908], "width": 100, "height": 100, "min_color_coverage": 0.3 },
-        { "coord": [435, 429], "width": 100, "height": 100, "min_color_coverage": 0.3 }
+        { "coord": [323, 324], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [134, 178], "width": 20, "height": 20, "min_color_coverage": 0.3 }
       ],
       "front_edge": [
-        { "coord": [481, 728], "width": 100, "height": 100, "min_color_coverage": 0.3 },
-        { "coord": [645, 265], "width": 60, "height": 60, "min_color_coverage": 0.3 }
+        { "coord": [165, 269], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [209, 101], "width": 20, "height": 20, "min_color_coverage": 0.3 }
       ],
       "right": [
-        { "coord": [435, 431], "width": 100, "height": 100, "min_color_coverage": 0.3, "max_color_coverage": 0.5 },
-        { "coord": [671, 247], "width": 100, "height": 100, "min_color_coverage": 0.3 }
+        { "coord": [136, 180], "width": 20, "height": 20, "min_color_coverage": 0.3, "max_color_coverage": 0.7 },
+        { "coord": [220, 108], "width": 20, "height": 20, "min_color_coverage": 0.3 }
       ],
       "right_edge": [
-        { "coord": [644, 254], "width": 60, "height": 60, "min_color_coverage": 0.3 },
-        { "coord": [1221, 257], "width": 60, "height": 60, "min_color_coverage": 0.3 }
+        { "coord": [435, 109], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [205, 104], "width": 20, "height": 20, "min_color_coverage": 0.3 }
       ],
       "back": [
-        { "coord": [1386, 425], "width": 100, "height": 100, "min_color_coverage": 0.3, "max_color_coverage": 0.5 },
-        { "coord": [1177, 263], "width": 100, "height": 100, "min_color_coverage": 0.8 }
+        { "coord": [499, 183], "width": 20, "height": 20, "min_color_coverage": 0.3, "max_color_coverage": 0.7 },
+        { "coord": [418, 110], "width": 20, "height": 20, "min_color_coverage": 0.3 }
       ],
       "back_edge": [
-        { "coord": [1335, 724], "width": 100, "height": 100, "min_color_coverage": 0.3 },
-        { "coord": [1223, 256], "width": 60, "height": 60, "min_color_coverage": 0.3 }
+        { "coord": [463, 274], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [435, 109], "width": 20, "height": 20, "min_color_coverage": 0.3 }
       ],
       "left": [
-        { "coord": [1364, 425], "width": 100, "height": 100, "min_color_coverage": 0.3 },
-        { "coord": [913, 893], "width": 100, "height": 100, "min_color_coverage": 0.3 }
+        { "coord": [323, 323], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [499, 183], "width": 20, "height": 20, "min_color_coverage": 0.3 }
       ],
       "left_edge": [
-        { "coord": [473, 718], "width": 100, "height": 100, "min_color_coverage": 0.3 },
-        { "coord": [1333, 714], "width": 100, "height": 100, "min_color_coverage": 0.3 }
+        { "coord": [177, 276], "width": 20, "height": 20, "min_color_coverage": 0.3 },
+        { "coord": [474, 276], "width": 20, "height": 20, "min_color_coverage": 0.3 }
       ]
     },
     "colors": [{
       "name": "gray",
-      "color_ranges": [ { "lower_color": [0, 0, 100], "upper_color": [179, 50, 255] } ]
+      "color_ranges": [ { "lower_color": [0, 0, 150], "upper_color": [179, 50, 255] } ]
     }]
   }
 }

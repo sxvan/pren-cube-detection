@@ -1,4 +1,4 @@
-import cv2 as cv
+import cv2
 import numpy as np
 
 from models.color import Color
@@ -22,14 +22,15 @@ class ColorService:
         color_pixel_count = np.count_nonzero(output)
         return color_pixel_count / total_pixel_count
 
-    def __get_img_in_color_ranges(self, img, color_ranges: [ColorRange]):
-        hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+    @staticmethod
+    def __get_img_in_color_ranges(img, color_ranges: [ColorRange]):
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = np.zeros_like(hsv[:, :, 0], dtype=np.uint8)
 
         for color_range in color_ranges:
-            current_mask = cv.inRange(hsv, color_range.lower_color, color_range.upper_color)
-            mask = cv.bitwise_or(mask, current_mask)
+            current_mask = cv2.inRange(hsv, color_range.lower_color, color_range.upper_color)
+            mask = cv2.bitwise_or(mask, current_mask)
 
-        result_img = cv.bitwise_and(img, img, mask=mask)
+        result_img = cv2.bitwise_and(img, img, mask=mask)
 
         return result_img

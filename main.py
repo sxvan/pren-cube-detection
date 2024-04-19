@@ -1,10 +1,5 @@
-import time
-
-import cv2 as cv
-
+import cv2
 from models.config.config import Config
-from models.cube_position import CubePosition
-from models.orientation import Orientation
 from services.color_service import ColorService
 from services.control_unit_service import ControlUnitService
 from services.cube_service import CubeService
@@ -14,38 +9,14 @@ from services.region_service import RegionService
 
 
 def main():
-    def get_orientation(img):
-        return quadrant_service.get_orientation(img, config.quadrant.regions, config.quadrant.colors)
-
-    def get_cubes(img, orientation: Orientation):
-        return cube_service.detect_cubes(
-            img,
-            config.cubes.side_regions,
-            config.cubes.edge_regions,
-            config.cubes.colors,
-            orientation)
-
-    # def get_changed_cubes(previous_cubes, current_cubes):
-    #     changed_cubes = {}
-    #     for position, color in current_cubes.items():
-    #         if position not in previous_cubes:
-    #             changed_cubes[position] = color
-    #
-    #     return changed_cubes
-
-    def is_cubes_complete(cubes):
-        positions = set(position for position in CubePosition)
-        cubes_keys = set(cubes.keys())
-
-        return positions.issubset(cubes_keys)
-
-    config = Config.from_json('config_new_new.json')
+    config = Config.from_json('config.json')
 
     color_service = ColorService()
     region_service = RegionService(color_service)
-    quadrant_service = QuadrantService(region_service)
-    cube_service = CubeService(region_service)
-    # pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
+    quadrant_service = QuadrantService(region_service, config.quadrant.regions, config.quadrant.colors)
+    cube_service = CubeService(region_service, config.cubes.side_regions, config.cubes.edge_regions,
+                               config.cubes.colors)
+    pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
     # control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
     #                                           config.control_unit.uart.port, config.control_unit.uart.baud_rate,
     #                                           config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
@@ -56,76 +27,46 @@ def main():
     # control_unit_service.send_ready_signal()
     # control_unit_service.wait_for_start_signal()
     # control_unit_service.send_unready_signal()
-    # pren_service.start()
+    pren_service.start()  # when to start? can capture be  before start?
 
     camera_profile = config.camera_profile
-    capture = cv.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
-                              f'@{camera_profile.ip_address}/{camera_profile.url}'
-                              f'?streamprofile={camera_profile.profile}')
+    cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
+                           f'@{camera_profile.ip_address}/{camera_profile.url}'
+                           f'?streamprofile={camera_profile.profile}')
 
     frame_count = 0
-    cubes = {}
-
-    start_time = None
-
-    processing_times = []
-    read_times = []
     while True:
-        try:
-            start_time = time.time()
+        frame_count += 1
+        if frame_count % config.frame_frequency == 0:
+            grabbed, frame = cap.read()
+            if not grabbed:
+                break
 
-            frame_count += 1
-            if frame_count % config.frame_frequency == 0:
-                start_read = time.time()
-                grabbed, frame = capture.read()
-                end_read = time.time()
-                read_times.append(end_read - start_read)
-                if not grabbed:
-                    break
+            orientation = quadrant_service.get_orientation(frame)
+            if orientation is None:
+                continue
 
-                orientation = get_orientation(frame)
-                if orientation is None:
-                    continue
+            print(orientation)
 
-                current_cubes = get_cubes(frame, orientation)
-                cubes.update(current_cubes)
-                print(orientation, cube_service.cubes)
-                # control_unit_service.send_cube_config(cube_service.cubes)
+            cube_service.detect_cubes(frame, orientation)
+            # control_unit_service.send_cube_config(cube_service.cubes)
 
-                if is_cubes_complete(cubes):
-                    break
+            if '?' not in cube_service.cubes.values():
+                break
 
-                config.quadrant.regions.pop(orientation)  # also remove orientations that look at same cube positions?
+            config.quadrant.regions.pop(orientation)
+        else:
+            if not cap.grab():
+                break
 
-                if len(config.quadrant.regions) < 1:
-                    break
-            else:
-                if not capture.grab():
-                    break
-        finally:
-            end_time = time.time()  # Record end time
-            processing_time = end_time - start_time
-            processing_times.append(processing_time)
+    pren_service.submit(cube_service.cubes)
 
-    processing_time = sum(processing_times)
-    read_time = sum(read_times)
-    # perfect_time = 1 / 25 * len(processing_times)
+    # control_unit_service.wait_for_end_signal()
+    pren_service.end()  # sometimes takes 5 seconds????
 
-    print('Processing time', processing_time)
-    print('Read time: ', read_time)
-
-    print('Avg processing time per frame: ', processing_time / len(processing_times))
-    print('Avg read time per frame: ', read_time / len(read_times))
-
-    print('Diff processing time and read time: ', processing_time - read_time)
-    print('Diff processing time and read time per frame: ', processing_time / len(processing_times) - read_time / len(read_times))
-
-    print(cube_service.cubes)
-    # pren_service.submit(cube_service.cubes)
-    # # control_unit_service.wait_for_end_signal()
-    # pren_service.end()
+    print(pren_service.get().content)
 
 
 if __name__ == '__main__':
-    # while True:
-    main()
+    while True:
+        main()

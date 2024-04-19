@@ -5,25 +5,26 @@ from services.region_service import RegionService
 
 
 class CubeService:
-    def __init__(self, region_service: RegionService):
-        self.region_service = region_service
+    def __init__(self, region_service: RegionService,
+                 cube_side_regions: (CubePosition, Region),
+                 cube_edge_regions: (CubePosition, Region),
+                 colors):
+        self.__region_service = region_service
         self.cubes = {position: '?' for position in CubePosition}
+        self.__cube_side_regions = cube_side_regions
+        self.__cube_edge_regions = cube_edge_regions
+        self.__colors = colors
 
-    def detect_cubes(self,
-                     img,
-                     cube_side_regions: (CubePosition, Region),
-                     cube_edge_regions: (CubePosition, Region),
-                     colors,
-                     orientation: Orientation):
+    def detect_cubes(self, img, orientation: Orientation):
         if orientation.value % 90 == 0:
-            cube_regions = cube_side_regions
+            cube_regions = self.__cube_side_regions
         else:
-            cube_regions = cube_edge_regions
+            cube_regions = self.__cube_edge_regions
 
         cube_detection_results = {}
 
         for cube_position, region in cube_regions.items():
-            color_name = self.region_service.get_region_color_name(img, region, colors)
+            color_name = self.__region_service.get_region_color_name(img, region, self.__colors)
             normalized_cube_position = self.__get_normalized_cube_position(orientation, cube_position)
             cube_detection_results[normalized_cube_position] = color_name
 
@@ -31,7 +32,8 @@ class CubeService:
 
         return cube_detection_results
 
-    def __get_normalized_cube_position(self, orientation: Orientation, cube_position: CubePosition) -> CubePosition:
+    @staticmethod
+    def __get_normalized_cube_position(orientation: Orientation, cube_position: CubePosition) -> CubePosition:
         if orientation == Orientation.FRONT_EDGE:
             orientation = Orientation.FRONT
         elif orientation == Orientation.RIGHT_EDGE:
