@@ -1,3 +1,5 @@
+import time
+
 import cv2 as cv
 
 from models.config.config import Config
@@ -37,7 +39,7 @@ def main():
 
         return positions.issubset(cubes_keys)
 
-    config = Config.from_json('config_new.json')
+    config = Config.from_json('config_new_new.json')
 
     color_service = ColorService()
     region_service = RegionService(color_service)
@@ -66,6 +68,10 @@ def main():
     frame_count = 0
     cubes = {}
 
+    fps = capture.get(cv.CAP_PROP_FPS)
+    print(fps)
+
+    start_time = time.time()
     while True:
         frame_count += 1
         if frame_count % config.frame_frequency == 0:
@@ -78,10 +84,16 @@ def main():
                 continue
 
             current_cubes = get_cubes(frame, orientation)
-            changed_cubes = get_changed_cubes(cubes, current_cubes)
+            # changed_cubes = get_changed_cubes(cubes, current_cubes)
             cubes.update(current_cubes)
-            print(orientation, changed_cubes)
-            control_unit_service.send_cube_config(cube_service.cubes)
+            # print(orientation, cube_service.cubes)
+            print(orientation)
+            end_time = time.time()
+            time_elapsed = end_time - start_time
+            if time_elapsed > 4:
+                print(time_elapsed)
+            start_time = time.time()
+            # control_unit_service.send_cube_config(cube_service.cubes)
 
             if is_cubes_complete(cubes):
                 break
@@ -101,5 +113,5 @@ def main():
 
 
 if __name__ == '__main__':
-    # while True:
-    main()
+    while True:
+        main()

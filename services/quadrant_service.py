@@ -1,3 +1,5 @@
+import cv2
+
 from models.color import Color
 from models.orientation import Orientation
 from models.region import Region

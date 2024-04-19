@@ -12,7 +12,7 @@ def draw_rectangle(event, x, y, flags, param):
         frame = param['frame']
         cv2.rectangle(frame, (x - 10, y - 10), (x + 10, y + 10), (0, 255, 0), 1)
         cv2.imshow('frame', frame)
-        print((x - 10, y - 10))
+        print((x, y))
 
 
 
@@ -20,7 +20,7 @@ def main():
     def get_orientation(img):
         return quadrant_service.get_orientation(img, config.quadrant.regions, config.quadrant.colors)
 
-    config = Config.from_json('config_new.json')
+    config = Config.from_json('config_new_new.json')
 
     color_service = ColorService()
     region_service = RegionService(color_service)
