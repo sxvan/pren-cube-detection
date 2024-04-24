@@ -7,10 +7,6 @@ from services.quadrant_service import QuadrantService
 from services.region_service import RegionService
 
 
-centerX = None
-centerY = None
-frame = None
-
 def draw_rectangle(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         frame = param['frame']
@@ -18,33 +14,14 @@ def draw_rectangle(event, x, y, flags, param):
         cv2.imshow('frame', frame)
         print((x, y))
 
-def on_mouse_click(event, x, y, flags, param):
-    global centerX
-    global centerY
-    global frame
-    if event == cv2.EVENT_LBUTTONDOWN:
-        centerX = x
-        centerY = y
 
-        x1, x2 = 0, frame.shape[1]
-        y1, y2 = centerY, centerY
-        cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
-
-        x1, x2 = centerX, centerX
-        y1, y2 = 0, frame.shape[0]
-        cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
-
-        cv2.imshow('frame', frame)
 def main():
-    global centerX
-    global centerY
-    global frame
-
     config = Config.from_json('config.json')
-
     color_service = ColorService()
     region_service = RegionService(color_service)
     quadrant_service = QuadrantService(region_service, config.quadrant.regions, config.quadrant.colors)
+    cube_service = CubeService(region_service, config.cubes.side_regions, config.cubes.edge_regions,
+                               config.cubes.colors)
 
     camera_profile = config.camera_profile
     cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
@@ -56,20 +33,21 @@ def main():
         if not grabbed:
             break
 
-        if centerX is not None and centerY is not None:
-            x1, x2 = 0, frame.shape[1]
-            y1, y2 = centerY, centerY
-            cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
+        orientation = quadrant_service.get_orientation(frame)
+        if not orientation or orientation.value % 90 == 0:
+            continue
 
-            x1, x2 = centerX, centerX
-            y1, y2 = 0, frame.shape[0]
-            cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
+        for position, region in config.cubes.edge_regions.items():
+            x1 = int((region.coord[0] - region.width / 2))
+            y1 = int((region.coord[1] - region.height / 2))
+            x2 = int(x1 + region.width)
+            y2 = int(y1 + region.height)
+
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0))
 
         cv2.imshow('frame', frame)
-        cv2.setMouseCallback('frame', on_mouse_click)
+        cv2.setMouseCallback('frame', draw_rectangle, {'frame': frame})
         cv2.waitKey()
-
-
 
 
 if __name__ == '__main__':
