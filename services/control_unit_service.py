@@ -20,7 +20,7 @@ class ControlUnitService:
         self.__baud_rate = baud_rate
         self.__retry_delay_ms = retry_delay_ms
         self.__ready_output = DigitalOutputDevice(self.__ready_pin)
-        self.__start_input = Button(self.__start_pin)
+        self.__start_input = DigitalInputDevice(self.__start_pin)
 
     def send_ready_signal(self):
         self.__ready_output.on()
