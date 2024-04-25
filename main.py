@@ -51,7 +51,7 @@ def main():
             print(orientation)
 
             cube_service.detect_cubes(frame, orientation)
-            # control_unit_service.send_cube_config(cube_service.cubes)
+            control_unit_service.send_cube_config(cube_service.cubes)
 
             if '?' not in cube_service.cubes.values():
                 break
