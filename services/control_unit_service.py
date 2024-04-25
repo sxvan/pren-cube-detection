@@ -1,5 +1,5 @@
 import serial
-from gpiozero import OutputDevice, InputDevice, DigitalInputDevice
+from gpiozero import OutputDevice, InputDevice, DigitalInputDevice, DigitalOutputDevice
 
 from models.cube_position import CubePosition
 
@@ -19,11 +19,11 @@ class ControlUnitService:
         self.__retry_delay_ms = retry_delay_ms
 
     def send_ready_signal(self):
-        with OutputDevice(self.__ready_pin) as ready_output:
+        with DigitalOutputDevice(self.__ready_pin) as ready_output:
             ready_output.on()
 
     def send_unready_signal(self):
-        with OutputDevice(self.__ready_pin) as ready_output:
+        with DigitalOutputDevice(self.__ready_pin) as ready_output:
             ready_output.off()
 
     def wait_for_start_signal(self):
