@@ -1,5 +1,5 @@
 import serial
-from gpiozero import OutputDevice, InputDevice
+from gpiozero import OutputDevice, InputDevice, DigitalInputDevice
 
 from models.cube_position import CubePosition
 
@@ -27,11 +27,11 @@ class ControlUnitService:
             ready_output.off()
 
     def wait_for_start_signal(self):
-        with InputDevice(self.__start_pin) as start_input:
+        with DigitalInputDevice(self.__start_pin) as start_input:
             start_input.wait_for_active()
 
     def wait_for_end_signal(self):
-        with InputDevice(self.__start_pin) as start_input:
+        with DigitalInputDevice(self.__start_pin) as start_input:
             start_input.wait_for_inactive()
 
     def send_cube_config(self, cube_config):
