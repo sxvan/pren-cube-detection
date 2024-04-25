@@ -1,3 +1,5 @@
+import time
+
 import serial
 from gpiozero import OutputDevice, InputDevice, DigitalInputDevice, DigitalOutputDevice, Button
 
@@ -27,12 +29,14 @@ class ControlUnitService:
             ready_output.off()
 
     def wait_for_start_signal(self):
-        with Button(self.__start_pin) as start_input:
-            start_input.wait_for_active()
+        with InputDevice(self.__start_pin) as start_input:
+            while not start_input.is_active:
+                time.sleep(0.1)
 
     def wait_for_end_signal(self):
-        with Button(self.__start_pin) as start_input:
-            start_input.wait_for_inactive()
+        with InputDevice(self.__start_pin) as start_input:
+            while start_input.is_active:
+                time.sleep(0.1)
 
     def send_cube_config(self, cube_config):
         data_string = self.__get_data_string(cube_config)
