@@ -20,7 +20,7 @@ class ControlUnitService:
         self.__baud_rate = baud_rate
         self.__retry_delay_ms = retry_delay_ms
         self.__ready_output = DigitalOutputDevice(self.__ready_pin)
-        self.__start_input = InputDevice(self.__start_pin)
+        self.__start_input = Button(self.__start_pin)
 
     def send_ready_signal(self):
         self.__ready_output.on()
@@ -29,12 +29,12 @@ class ControlUnitService:
         self.__ready_output.off()
 
     def wait_for_start_signal(self):
-        while not self.__start_input.is_active:
-            time.sleep(0.1)
+        self.__start_input.wait_for_active()
+        # while not self.__start_input.is_active:
+        #     time.sleep(0.1)
 
     def wait_for_end_signal(self):
-        while self.__start_input.is_active:
-            time.sleep(0.1)
+        self.__start_input.wait_for_inactive()
 
     def send_cube_config(self, cube_config):
         data_string = self.__get_data_string(cube_config)
