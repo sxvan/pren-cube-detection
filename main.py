@@ -1,4 +1,6 @@
 import cv2
+from gpiozero import DigitalOutputDevice
+
 from models.config.config import Config
 from services.color_service import ColorService
 from services.control_unit_service import ControlUnitService
@@ -24,6 +26,8 @@ def main():
                                               config.control_unit.uart.start_character,
                                               config.control_unit.uart.crc8_poly)
 
+    ready = DigitalOutputDevice(24)
+    ready.on()
     control_unit_service.send_ready_signal()
     control_unit_service.wait_for_start_signal()
     control_unit_service.send_unready_signal()
