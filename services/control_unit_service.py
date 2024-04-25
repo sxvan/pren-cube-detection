@@ -27,11 +27,11 @@ class ControlUnitService:
             ready_output.off()
 
     def wait_for_start_signal(self):
-        with DigitalInputDevice(self.__start_pin) as start_input:
+        with InputDevice(self.__start_pin) as start_input:
             start_input.wait_for_active()
 
     def wait_for_end_signal(self):
-        with DigitalInputDevice(self.__start_pin) as start_input:
+        with InputDevice(self.__start_pin) as start_input:
             start_input.wait_for_inactive()
 
     def send_cube_config(self, cube_config):
