@@ -19,24 +19,22 @@ class ControlUnitService:
         self.__uart_port = uart_port
         self.__baud_rate = baud_rate
         self.__retry_delay_ms = retry_delay_ms
+        self.__ready_output = DigitalOutputDevice(self.__ready_pin)
+        self.__start_input = InputDevice(self.__start_pin)
 
     def send_ready_signal(self):
-        with DigitalOutputDevice(self.__ready_pin) as ready_output:
-            ready_output.on()
+        self.__ready_output.on()
 
     def send_unready_signal(self):
-        with DigitalOutputDevice(self.__ready_pin) as ready_output:
-            ready_output.off()
+        self.__ready_output.off()
 
     def wait_for_start_signal(self):
-        with InputDevice(self.__start_pin) as start_input:
-            while not start_input.is_active:
-                time.sleep(0.1)
+        while not self.__start_input.is_active:
+            time.sleep(0.1)
 
     def wait_for_end_signal(self):
-        with InputDevice(self.__start_pin) as start_input:
-            while start_input.is_active:
-                time.sleep(0.1)
+        while self.__start_input.is_active:
+            time.sleep(0.1)
 
     def send_cube_config(self, cube_config):
         data_string = self.__get_data_string(cube_config)
