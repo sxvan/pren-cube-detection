@@ -11,7 +11,7 @@ from services.region_service import RegionService
 
 
 def main():
-    config = Config.from_json('config.json')
+    config = Config.from_json('config_test.json')
 
     color_service = ColorService()
     region_service = RegionService(color_service)
@@ -19,17 +19,17 @@ def main():
     cube_service = CubeService(region_service, config.cubes.side_regions, config.cubes.edge_regions,
                                config.cubes.colors)
     pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
-    control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
-                                              config.control_unit.uart.port, config.control_unit.uart.baud_rate,
-                                              config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
-                                              config.control_unit.uart.retry_delay_ms,
-                                              config.control_unit.uart.start_character,
-                                              config.control_unit.uart.crc8_poly)
+    # control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
+    #                                           config.control_unit.uart.port, config.control_unit.uart.baud_rate,
+    #                                           config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
+    #                                           config.control_unit.uart.retry_delay_ms,
+    #                                           config.control_unit.uart.start_character,
+    #                                           config.control_unit.uart.crc8_poly)
 
-    control_unit_service.send_ready_signal()
-    control_unit_service.wait_for_start_signal()
-    control_unit_service.send_unready_signal()
-    pren_service.start()  # when to start? can capture be  before start?
+    # control_unit_service.send_ready_signal()
+    # control_unit_service.wait_for_start_signal()
+    # control_unit_service.send_unready_signal()
+    pren_service.start()  # when to start? can capture be before start?
 
     camera_profile = config.camera_profile
     cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
@@ -48,10 +48,11 @@ def main():
             if orientation is None:
                 continue
 
-            print(orientation)
+            # print(orientation)
 
             cube_service.detect_cubes(frame, orientation)
-            control_unit_service.send_cube_config(cube_service.cubes)
+            print(cube_service.cubes)
+            # control_unit_service.send_cube_config(cube_service.cubes)
 
             if '?' not in cube_service.cubes.values():
                 break
@@ -61,12 +62,13 @@ def main():
             if not cap.grab():
                 break
 
-    pren_service.submit(cube_service.cubes)
-
-    control_unit_service.wait_for_end_signal()
-    pren_service.end()  # sometimes takes 5 seconds????
-
-    print(pren_service.get().content)
+    print(cube_service.cubes)
+    # pren_service.submit(cube_service.cubes)
+    #
+    # # control_unit_service.wait_for_end_signal()
+    # pren_service.end()
+    #
+    # print(pren_service.get().content)
 
 
 if __name__ == '__main__':
