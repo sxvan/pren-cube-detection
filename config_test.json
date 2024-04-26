@@ -32,7 +32,7 @@
     "side_regions": {
       "top_back_left": [{ "coord": [291, 64], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
       "top_back_right": [{ "coord": [353, 61], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
-      "bottom_front_left": [{ "coord": [295, 203], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
+      "bottom_front_left": [{ "coord": [295, 203], "width": 20, "height": 20, "min_color_coverage": 0.5 }],
       "bottom_front_right": [{ "coord": [358, 203], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
       "top_front_left": [
         { "coord":  [287, 156], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_different": ["bottom_front_left"] },
@@ -53,7 +53,7 @@
     },
     "edge_regions": {
       "top_front_left": [{ "coord": [248, 106], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
-      "bottom_front_left": [{ "coord": [255, 164], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
+      "bottom_front_left": [{ "coord": [255, 164], "width": 20, "height": 20, "min_color_coverage": 0.5 }],
       "top_back_right": [{ "coord": [400, 109], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
       "bottom_back_right": [{ "coord": [386, 163], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
       "bottom_front_right": [{ "coord": [327, 215], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
@@ -80,7 +80,7 @@
     },
     {
       "name": "blue",
-      "color_ranges": [ { "lower_color": [90, 100, 50], "upper_color": [130, 255, 255] } ]
+      "color_ranges": [ { "lower_color": [90, 50, 50], "upper_color": [179, 255, 255] } ]
     },
     {
       "name": "yellow",

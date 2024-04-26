@@ -2,6 +2,7 @@ import cv2
 from gpiozero import DigitalOutputDevice
 
 from models.config.config import Config
+from models.orientation import Orientation
 from services.color_service import ColorService
 from services.control_unit_service import ControlUnitService
 from services.cube_service import CubeService
@@ -45,13 +46,12 @@ def main():
                 break
 
             orientation = quadrant_service.get_orientation(frame)
-            if orientation is None:
+            if orientation is None: #or orientation != Orientation.RIGHT and orientation != Orientation.RIGHT_EDGE:
                 continue
 
-            # print(orientation)
+            print(orientation)
 
             cube_service.detect_cubes(frame, orientation)
-            print(cube_service.cubes)
             # control_unit_service.send_cube_config(cube_service.cubes)
 
             if '?' not in cube_service.cubes.values():
