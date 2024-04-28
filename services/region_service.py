@@ -9,7 +9,6 @@ class RegionService:
 
     def get_region_color_name(self, img, region, colors):
         region_img = self._get_region_img(img, region)
-        # print(np.mean(region_img))
         color = self._color_service.get_color(region_img, colors, region.min_color_coverage, region.max_color_coverage)
         if color:
             return color.name

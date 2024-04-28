@@ -32,32 +32,71 @@
     "side_regions": {
       "top_back_left": [{ "coord": [291, 64], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
       "top_back_right": [{ "coord": [353, 61], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
-      "bottom_front_left": [{ "coord": [295, 203], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
-      "bottom_front_right": [{ "coord": [358, 203], "width": 20, "height": 20, "min_color_coverage": 0.7 }]
+      "bottom_front_left": [{ "coord": [295, 203], "width": 20, "height": 20, "min_color_coverage": 0.5 }],
+      "bottom_front_right": [{ "coord": [358, 203], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
+      "top_front_left": [
+        { "coord":  [287, 156], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_different": ["bottom_front_left"] },
+        { "coord":  [287, 119], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["bottom_back_left"] },
+        { "coord":  [287, 119], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_different": ["top_back_left"] },
+        { "coord":  [287, 119], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_back_left"], "when_different": ["bottom_back_left"] }
+      ],
+      "top_front_right": [
+        { "coord":  [354, 155], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_different": ["bottom_front_right"] },
+        { "coord":  [348, 116], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["bottom_back_right"] },
+        { "coord":  [348, 116], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_different": ["top_back_right"] },
+        { "coord":  [348, 116], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_back_right"], "when_different": ["bottom_back_right"] }
+      ],
+      "bottom_back_left": [
+        { "coord":  [287, 156], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["bottom_front_left"] },
+        { "coord":  [287, 119], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_front_left", "top_back_left"] },
+        { "coord":  [287, 119], "width": 20, "height": 20, "min_color_coverage": 0.7, "only_missing": true }
+      ],
+      "bottom_back_right": [
+        { "coord":  [354, 155], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["bottom_front_right"] },
+        { "coord":  [348, 116], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_front_right", "top_back_right"] },
+        { "coord":  [348, 116], "width": 20, "height": 20, "min_color_coverage": 0.7, "only_missing": true }
+      ]
     },
     "edge_regions": {
       "top_front_left": [{ "coord": [248, 106], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
-      "bottom_front_left": [{ "coord": [255, 164], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
+      "bottom_front_left": [{ "coord": [255, 164], "width": 20, "height": 20, "min_color_coverage": 0.5 }],
       "top_back_right": [{ "coord": [400, 109], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
       "bottom_back_right": [{ "coord": [386, 163], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
       "bottom_front_right": [{ "coord": [327, 215], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
-      "top_back_left": [{ "coord": [311, 55], "width": 20 , "height":  20, "min_color_coverage": 0.7 }]
+      "top_back_left": [{ "coord": [324, 53], "width": 20 , "height":  20, "min_color_coverage": 0.7 }],
+      "top_front_right": [
+        { "coord": [326, 161], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_different": ["bottom_front_right"] },
+        { "coord": [345, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["bottom_back_right", "bottom_back_left"] },
+        { "coord": [345, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["bottom_back_right"], "when_different": ["bottom_back_left"] },
+        { "coord": [345, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_different": ["top_back_right"] },
+        { "coord": [345, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_back_right"], "when_different": ["bottom_back_right"] },
+        { "coord": [291, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["bottom_front_left", "bottom_back_left"] },
+        { "coord": [291, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["bottom_front_left"], "when_different": ["bottom_back_left"] },
+        { "coord": [291, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_different": ["top_front_left"] },
+        { "coord": [291, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_front_left"], "when_different": ["bottom_front_left"] }
+      ],
+      "bottom_back_left": [
+        { "coord": [330, 109], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_front_right", "top_back_left", "top_back_right"] },
+        { "coord": [307, 111], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_front_right", "top_back_left", "top_front_left"] },
+        { "coord": [345, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_front_right", "bottom_back_right"] },
+        { "coord": [291, 133], "width": 20, "height": 20, "min_color_coverage": 0.7, "when_missing": ["top_front_right", "bottom_front_left"] }
+      ]
     },
     "colors": [
     {
       "name": "red",
       "color_ranges": [
-        { "lower_color": [0, 100, 100], "upper_color": [10, 255, 255] },
-        { "lower_color": [160, 100, 100], "upper_color": [180, 255, 255] }
+        { "lower_color": [0, 50, 50], "upper_color": [10, 255, 255] },
+        { "lower_color": [160, 50, 50], "upper_color": [180, 255, 255] }
       ]
     },
     {
       "name": "blue",
-      "color_ranges": [ { "lower_color": [90, 100, 50], "upper_color": [130, 255, 255] } ]
+      "color_ranges": [ { "lower_color": [90, 50, 50], "upper_color": [130, 255, 255] } ]
     },
     {
       "name": "yellow",
-      "color_ranges": [ { "lower_color": [20, 100, 50], "upper_color": [40, 255, 255] } ]
+      "color_ranges": [ { "lower_color": [20, 50, 50], "upper_color": [40, 255, 255] } ]
     }]
   },
   "quadrant": {

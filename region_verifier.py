@@ -17,7 +17,7 @@ def draw_rectangle(event, x, y, flags, param):
 
 
 def main():
-    config = Config.from_json('config_temp.json')
+    config = Config.from_json('config.json')
     color_service = ColorService()
     region_service = RegionService(color_service)
     quadrant_service = QuadrantService(region_service, config.quadrant.regions, config.quadrant.colors)
@@ -29,14 +29,14 @@ def main():
                            f'@{camera_profile.ip_address}/{camera_profile.url}'
                            f'?streamprofile={camera_profile.profile}')
 
-    ColorService.generate_color_palette(0, 179, 0, 255, 0, 255, 100)
+    # ColorService.generate_color_palette(0, 179, 0, 255, 0, 255, 100)
     while True:
         grabbed, frame = cap.read()
         if not grabbed:
             break
 
         orientation = quadrant_service.get_orientation(frame)
-        if not orientation or orientation != Orientation.RIGHT:
+        if not orientation or orientation != Orientation.FRONT_EDGE:
             continue
 
         print(orientation)
@@ -48,18 +48,18 @@ def main():
         if orientation.value % 90 == 0:
             cube_regions = config.cubes.side_regions
 
-        # for position, regions in cube_regions.items():
-        #     for region in regions:
-        #         x1 = int((region.coord[0] - region.width / 2))
-        #         y1 = int((region.coord[1] - region.height / 2))
-        #         x2 = int(x1 + region.width)
-        #         y2 = int(y1 + region.height)
-        #
-        #         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0))
-        #
-        # cv2.imshow('frame', frame)
-        # cv2.setMouseCallback('frame', draw_rectangle, {'frame': frame})
-        # cv2.waitKey()
+        for position, regions in cube_regions.items():
+            for region in regions:
+                x1 = int((region.coord[0] - region.width / 2))
+                y1 = int((region.coord[1] - region.height / 2))
+                x2 = int(x1 + region.width)
+                y2 = int(y1 + region.height)
+
+                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0))
+
+        cv2.imshow('frame', frame)
+        cv2.setMouseCallback('frame', draw_rectangle, {'frame': frame})
+        cv2.waitKey()
 
 
 if __name__ == '__main__':

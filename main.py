@@ -1,8 +1,11 @@
+import time
+
 import cv2
 from gpiozero import DigitalOutputDevice
 
 from models.config.config import Config
 from models.orientation import Orientation
+from services import pren_service
 from services.color_service import ColorService
 from services.control_unit_service import ControlUnitService
 from services.cube_service import CubeService
@@ -12,7 +15,7 @@ from services.region_service import RegionService
 
 
 def main():
-    config = Config.from_json('config_test.json')
+    config = Config.from_json('config.json')
 
     color_service = ColorService()
     region_service = RegionService(color_service)
@@ -46,7 +49,7 @@ def main():
                 break
 
             orientation = quadrant_service.get_orientation(frame)
-            if orientation is None: #or orientation != Orientation.RIGHT and orientation != Orientation.RIGHT_EDGE:
+            if orientation is None:
                 continue
 
             print(orientation)

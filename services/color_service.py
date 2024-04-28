@@ -21,11 +21,6 @@ class ColorService:
         output = self.__get_img_in_color_ranges(img, color_ranges)
         total_pixel_count = output.size
         color_pixel_count = np.count_nonzero(output)
-        if color_ranges[0].lower_color == (0, 0, 0):
-            print(color_ranges[0].lower_color, color_ranges[0].upper_color)
-            print('color pixel:', color_pixel_count)
-            print('total pixel:', total_pixel_count)
-            print('color coverage:', color_pixel_count / total_pixel_count)
         return color_pixel_count / total_pixel_count
 
     @staticmethod
@@ -58,7 +53,6 @@ class ColorService:
         mask = np.zeros_like(hsv[:, :, 0], dtype=np.uint8)
 
         for color_range in color_ranges:
-            # ColorService.generate_color_palette(0, 179, 0, 20, 100, 255, 100)
             current_mask = cv2.inRange(hsv, color_range.lower_color, color_range.upper_color)
             mask = cv2.bitwise_or(mask, current_mask)
 
