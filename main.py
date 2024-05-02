@@ -4,6 +4,7 @@ import cv2
 from gpiozero import DigitalOutputDevice
 
 from models.config.config import Config
+from models.cube_position import CubePosition
 from models.orientation import Orientation
 from services import pren_service
 from services.color_service import ColorService
@@ -29,11 +30,12 @@ def main():
     #                                           config.control_unit.uart.retry_delay_ms,
     #                                           config.control_unit.uart.start_character,
     #                                           config.control_unit.uart.crc8_poly)
-
+    #
     # control_unit_service.send_ready_signal()
     # control_unit_service.wait_for_start_signal()
     # control_unit_service.send_unready_signal()
     pren_service.start()  # when to start? can capture be before start?
+
 
     camera_profile = config.camera_profile
     cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'

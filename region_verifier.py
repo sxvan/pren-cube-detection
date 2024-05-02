@@ -37,26 +37,36 @@ def main():
             break
 
         orientation = quadrant_service.get_orientation(frame)
-        if not orientation: # or orientation != Orientation.LEFT_EDGE:
+        if not orientation:
             continue
 
-        print(orientation)
+        # for orientation, regions in config.quadrant.regions.items():
+        #     print(orientation)
+        #     for region in regions:
+        #         x1 = int((region.coord[0] - region.width / 2))
+        #         y1 = int((region.coord[1] - region.height / 2))
+        #         x2 = int(x1 + region.width)
+        #         y2 = int(y1 + region.height)
+        #
+        #         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0))
 
-        cube_service.detect_cubes(frame, orientation)
-        print(cube_service.cubes)
+        # print(orientation)
+        #
+        # cube_service.detect_cubes(frame, orientation)
+        # print(cube_service.cubes)
 
-        cube_regions = config.cubes.edge_regions
-        if orientation.value % 90 == 0:
-            cube_regions = config.cubes.side_regions
+        # cube_regions = config.cubes.side_regions
+        # if orientation.value % 90 == 0:
+        #    cube_regions = config.cubes.side_regions
 
-        for position, regions in cube_regions.items():
-            for region in regions:
-                x1 = int((region.coord[0] - region.width / 2))
-                y1 = int((region.coord[1] - region.height / 2))
-                x2 = int(x1 + region.width)
-                y2 = int(y1 + region.height)
-
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0))
+        # for position, regions in cube_regions.items():
+        #     for region in regions:
+        #         x1 = int((region.coord[0] - region.width / 2))
+        #         y1 = int((region.coord[1] - region.height / 2))
+        #         x2 = int(x1 + region.width)
+        #         y2 = int(y1 + region.height)
+        #
+        #         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0))
 
         cv2.imshow('frame', frame)
         cv2.setMouseCallback('frame', draw_rectangle, {'frame': frame})
