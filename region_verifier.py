@@ -32,11 +32,12 @@ def main():
     # ColorService.generate_color_palette(0, 179, 0, 255, 0, 255, 100)
     while True:
         grabbed, frame = cap.read()
+
         if not grabbed:
             break
 
         orientation = quadrant_service.get_orientation(frame)
-        if not orientation or orientation != Orientation.FRONT_EDGE:
+        if not orientation: # or orientation != Orientation.LEFT_EDGE:
             continue
 
         print(orientation)
