@@ -4,6 +4,7 @@ import cv2
 from gpiozero import DigitalOutputDevice
 
 from models.config.config import Config
+from models.cube_position import CubePosition
 from models.orientation import Orientation
 from services import pren_service
 from services.color_service import ColorService
@@ -23,17 +24,29 @@ def main():
     cube_service = CubeService(region_service, config.cubes.side_regions, config.cubes.edge_regions,
                                config.cubes.colors)
     pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
-    # control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
-    #                                           config.control_unit.uart.port, config.control_unit.uart.baud_rate,
-    #                                           config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
-    #                                           config.control_unit.uart.retry_delay_ms,
-    #                                           config.control_unit.uart.start_character,
-    #                                           config.control_unit.uart.crc8_poly)
+    control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
+                                              config.control_unit.uart.port, config.control_unit.uart.baud_rate,
+                                              config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
+                                              config.control_unit.uart.retry_delay_ms,
+                                              config.control_unit.uart.start_character,
+                                              config.control_unit.uart.crc8_poly)
 
-    # control_unit_service.send_ready_signal()
-    # control_unit_service.wait_for_start_signal()
-    # control_unit_service.send_unready_signal()
+    control_unit_service.send_ready_signal()
+    control_unit_service.wait_for_start_signal()
+    control_unit_service.send_unready_signal()
     pren_service.start()  # when to start? can capture be before start?
+
+    control_unit_service.send_cube_config({
+        CubePosition.BOTTOM_FRONT_LEFT: 'red',
+        CubePosition.BOTTOM_FRONT_RIGHT: 'red',
+        CubePosition.BOTTOM_BACK_RIGHT: 'red',
+        CubePosition.BOTTOM_BACK_LEFT: 'red',
+        CubePosition.TOP_FRONT_LEFT: '',
+        CubePosition.TOP_FRONT_RIGHT: '',
+        CubePosition.TOP_BACK_RIGHT: '',
+        CubePosition.TOP_BACK_LEFT: '',
+    })
+    exit()
 
     camera_profile = config.camera_profile
     cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
