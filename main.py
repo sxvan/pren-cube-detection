@@ -1,3 +1,4 @@
+import random
 import time
 
 import cv2
@@ -33,14 +34,38 @@ def main():
 
     cube_str = input('Enter cube string to send: ')
 
-    control_unit_service.send_ready_signal()
-    control_unit_service.wait_for_start_signal()
-    control_unit_service.send_unready_signal()
+    current_cube_str = ''
 
-    # pren_service.start()  # when to start? can capture be before start?
-    print('Sending: ', cube_str)
-    control_unit_service.send_cube_config_str(cube_str)
-    print('Sent cube config')
+    for cube in cube_str:
+        choice = random.choice([True, False])
+        if choice:
+            current_cube_str += cube
+        else:
+            current_cube_str += 'X'
+
+    current_cube_str = current_cube_str + '0'
+    cube_str = cube_str + '0'
+
+    print('Sending:', current_cube_str)
+    control_unit_service.send_cube_config_str(current_cube_str)
+
+    time.sleep(1)
+
+    if cube_str != current_cube_str:
+        control_unit_service.send_cube_config_str(current_cube_str)
+        print('Sending:', cube_str)
+
+    print('Finished sending')
+
+
+
+    # control_unit_service.send_ready_signal()
+    # control_unit_service.wait_for_start_signal()
+    # control_unit_service.send_unready_signal()
+    #
+    # # pren_service.start()  # when to start? can capture be before start?
+    # print('Sending: ', cube_str)
+    # control_unit_service.send_cube_config_str(cube_str)
 
 
     # camera_profile = config.camera_profile
