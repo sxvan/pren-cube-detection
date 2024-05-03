@@ -34,6 +34,11 @@ def main():
 
     cube_str = input('Enter cube string to send: ')
 
+    control_unit_service.send_ready_signal()
+    control_unit_service.wait_for_start_signal()
+    control_unit_service.send_unready_signal()
+    #
+    # # pren_service.start()  # when to start? can capture be before start?
     current_cube_str = ''
 
     for cube in cube_str:
@@ -56,16 +61,6 @@ def main():
         print('Sending:', cube_str)
 
     print('Finished sending')
-
-
-
-    # control_unit_service.send_ready_signal()
-    # control_unit_service.wait_for_start_signal()
-    # control_unit_service.send_unready_signal()
-    #
-    # # pren_service.start()  # when to start? can capture be before start?
-    # print('Sending: ', cube_str)
-    # control_unit_service.send_cube_config_str(cube_str)
 
 
     # camera_profile = config.camera_profile
