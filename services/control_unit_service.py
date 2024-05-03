@@ -38,6 +38,9 @@ class ControlUnitService:
         data_string = self._get_data_string(cube_config)
         return self.__send_msg(data_string)
 
+    def send_cube_config_str(self, cube_str):
+        return self.__send_msg(cube_str)
+
     def __send_msg(self, msg):
         msg_bytes = msg.encode(self._encoding)
         crc8 = self._get_crc8(msg_bytes)
