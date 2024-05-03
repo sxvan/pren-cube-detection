@@ -57,7 +57,7 @@ def main():
     time.sleep(1)
 
     if cube_str != current_cube_str:
-        control_unit_service.send_cube_config_str(current_cube_str)
+        control_unit_service.send_cube_config_str(cube_str)
         print('Sending:', cube_str)
 
     print('Finished sending')
