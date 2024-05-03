@@ -46,7 +46,7 @@ def main():
         if choice:
             current_cube_str += cube
         else:
-            current_cube_str += 'X'
+            current_cube_str += '?'
 
     current_cube_str = current_cube_str + '0'
     cube_str = cube_str + '0'
