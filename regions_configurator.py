@@ -16,11 +16,10 @@ def draw_rectangle(event, x, y, frame):
     print((x, y))
 
 
-def update_json_file(file_path, side_regions, region_name, new_value):
+def update_json_file(file_path, region, region_name, new_value):
     with open(file_path, 'r+') as file:
-        print("open")
         data = json.load(file)
-        for region in data['cubes'][side_regions][region_name]:
+        for region in data['cubes'][region][region_name]:
             region['coord'] = new_value
         file.seek(0)
         json.dump(data, file, indent=4)
@@ -30,7 +29,7 @@ def update_json_file(file_path, side_regions, region_name, new_value):
 def accept_cube_position(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         draw_rectangle(event, x, y, param['frame'])
-        update_json_file(param['config_path'], param['side_regions'], param['cube_position'], [x, y])
+        update_json_file(param['config_path'], param['region'], param['cube_position'], [x, y])
 
 def main():
     config = Config.from_json('config.json')
@@ -54,7 +53,7 @@ def main():
             break
         orientation = quadrant_service.get_orientation(frame)
         if orientation and (started or orientation == Orientation.FRONT):
-            print("here")
+            print("frame")
             started = True
 
             if orientation not in frames:
@@ -64,16 +63,42 @@ def main():
                 print("finish")
                 break
 
+    side_region_cube_positions = [
+        "top_back_left",
+        "top_back_right",
+        "bottom_front_left",
+        "bottom_front_right",
+        "top_front_left",
+        "top_front_right",
+        "bottom_back_left",
+        "bottom_back_right"
+    ]
 
-
+    edge_region_cube_positions = [
+        "top_front_left",
+        "bottom_front_left",
+        "top_back_left",
+        "bottom_back_left",
+        "top_front_right",
+        "bottom_front_right",
+        "top_back_right",
+        "bottom_back_right"
+    ]
 
     for orientation, frame in frames.items():
+        region = "edge_regions" if orientation.name.endswith("EDGE") else "side_regions"
+        cube_positions = side_region_cube_positions if orientation.name.endswith("EDGE") else edge_region_cube_positions
+
         template_frames = cv2.imread(os.path.join('template_frames', f'{orientation}.jpg'))
         cv2.imshow('template_frames', template_frames)
         cv2.imshow('frame', frame)
-        cv2.setMouseCallback('frame', accept_cube_position, {'frame': frame, "config_path": 'config.json',
-                                                             'side_regions': 'side_regions',
-                                                             'cube_position': 'bottom_front_right'})
+        print(f"-------------{orientation}-----------------")
+        for cube_position in cube_positions:
+            print(cube_position)
+            cv2.setMouseCallback('frame', accept_cube_position, {'frame': frame, "config_path": 'config.json',
+                                                                 'region': region, 'cube_position': cube_position})
+
+            cv2.waitKey()
         cv2.waitKey()
 
 if __name__ == '__main__':
