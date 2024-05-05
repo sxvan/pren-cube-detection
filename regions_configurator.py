@@ -1,6 +1,7 @@
 import cv2
+import pickle
+import os
 import json
-
 from models.config.config import Config
 from models.orientation import Orientation
 from services.color_service import ColorService
@@ -31,7 +32,6 @@ def accept_cube_position(event, x, y, flags, param):
         draw_rectangle(event, x, y, param['frame'])
         update_json_file(param['config_path'], param['side_regions'], param['cube_position'], [x, y])
 
-
 def main():
     config = Config.from_json('config.json')
     color_service = ColorService()
@@ -46,50 +46,35 @@ def main():
                            f'?streamprofile={camera_profile.profile}')
 
     # ColorService.generate_color_palette(0, 179, 0, 255, 0, 255, 100)
-
-
-    #while -> save Frames
-
-
-    orientations_seen = []
     started = False
+    frames = {}
     while True:
         grabbed, frame = cap.read()
         if not grabbed:
             break
-
         orientation = quadrant_service.get_orientation(frame)
-        if started or (not orientation or orientation != Orientation.FRONT_EDGE):
-            continue
-        else:
+        if orientation and (started or orientation == Orientation.FRONT):
+            print("here")
             started = True
 
+            if orientation not in frames:
+                frames[orientation] = frame
+
+            if orientation == Orientation.LEFT_EDGE:
+                print("finish")
+                break
 
 
-        print(orientation)
 
-        cube_service.detect_cubes(frame, orientation)
-        print(cube_service.cubes)
 
-        cube_regions = config.cubes.edge_regions
-        if orientation.value % 90 == 0:
-            cube_regions = config.cubes.side_regions
-
-        for position, regions in cube_regions.items():
-            for region in regions:
-                x1 = int((region.coord[0] - region.width / 2))
-                y1 = int((region.coord[1] - region.height / 2))
-                x2 = int(x1 + region.width)
-                y2 = int(y1 + region.height)
-
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0))
-
+    for orientation, frame in frames.items():
+        template_frames = cv2.imread(os.path.join('template_frames', f'{orientation}.jpg'))
+        cv2.imshow('template_frames', template_frames)
         cv2.imshow('frame', frame)
         cv2.setMouseCallback('frame', accept_cube_position, {'frame': frame, "config_path": 'config.json',
                                                              'side_regions': 'side_regions',
                                                              'cube_position': 'bottom_front_right'})
         cv2.waitKey()
-
 
 if __name__ == '__main__':
     main()
