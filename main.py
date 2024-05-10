@@ -25,16 +25,16 @@ def main():
                                               config.control_unit.uart.start_character,
                                               config.control_unit.uart.crc8_poly)
 
+    camera_profile = config.camera_profile
+    cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
+                           f'@{camera_profile.ip_address}/{camera_profile.url}'
+                           f'?streamprofile={camera_profile.profile}')
+
     control_unit_service.send_ready_signal()
     control_unit_service.wait_for_start_signal()
     control_unit_service.send_unready_signal()
 
     pren_service.start()  # when to start? can capture be before start?
-
-    camera_profile = config.camera_profile
-    cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
-                           f'@{camera_profile.ip_address}/{camera_profile.url}'
-                           f'?streamprofile={camera_profile.profile}')
 
     frame_count = 0
     while True:
@@ -64,8 +64,8 @@ def main():
     pren_service.submit(cube_service.cubes)
 
     control_unit_service.wait_for_end_signal()
-    pren_service.end()
 
+    pren_service.end()
     print(pren_service.get().content)
 
 
