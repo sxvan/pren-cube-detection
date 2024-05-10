@@ -1,7 +1,6 @@
 import cv2
 
 from models.config.config import Config
-from models.cube_position import CubePosition
 from models.orientation import Orientation
 from services.color_service import ColorService
 from services.cube_service import CubeService
@@ -30,42 +29,57 @@ def main():
                            f'@{camera_profile.ip_address}/{camera_profile.url}'
                            f'?streamprofile={camera_profile.profile}')
 
-    # ColorService.generate_color_palette(0, 0, 221, 221, 233, 233, 10)
+    # ColorService.generate_color_palette(0, 179, 0, 255, 0, 255, 100)
     right = 0
     bottom = 0
     while True:
-        cube_service = CubeService(region_service, config.cubes.side_regions, config.cubes.edge_regions,
-                                   config.cubes.colors)
         grabbed, frame = cap.read()
 
         if not grabbed:
             break
 
-        orientation = quadrant_service.get_orientation(frame)
-        if not orientation:
-            continue
-
-        print(orientation)
-
-        cube_service.detect_cubes(frame, orientation)
-        print(cube_service.cubes)
-
-        cube_regions = config.cubes.edge_regions
-        if orientation.value % 90 == 0:
-            cube_regions = config.cubes.side_regions
-
-        for position, regions in cube_regions.items():
+        frame_copy = frame.copy()
+        for orientation, regions in config.quadrant.regions.items():
+            if orientation != Orientation.RIGHT_EDGE:
+                continue
             for region in regions:
-                x1 = int((region.coord[0] - region.width / 2))
-                y1 = int((region.coord[1] - region.height / 2))
+                x1 = int((region.coord[0] + right - region.width / 2))
+                y1 = int((region.coord[1] + bottom - region.height / 2))
                 x2 = int(x1 + region.width)
                 y2 = int(y1 + region.height)
 
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0))
+                cv2.rectangle(frame_copy, (x1, y1), (x2, y2), (0, 255, 0))
 
-        cv2.imshow('frame', frame)
+        cv2.imshow('frame', frame_copy)
         cv2.setMouseCallback('frame', draw_rectangle, {'frame': frame})
-        cv2.waitKey()
+
+        key = None
+        while key != 13:
+            key = cv2.waitKeyEx(0)
+            if key == 2424832:
+                right -= 1
+            if key == 2555904:
+                right += 1
+            if key == 2490368:
+                bottom -= 1
+            if key == 2621440:
+                bottom += 1
+
+            frame_copy = frame.copy()
+            for orientation, regions in config.quadrant.regions.items():
+                if orientation != Orientation.RIGHT_EDGE:
+                    continue
+                for region in regions:
+                    x1 = int((region.coord[0] + right - region.width / 2))
+                    y1 = int((region.coord[1] + bottom - region.height / 2))
+                    x2 = int(x1 + region.width)
+                    y2 = int(y1 + region.height)
+
+                    cv2.rectangle(frame_copy, (x1, y1), (x2, y2), (0, 255, 0))
+            cv2.imshow('frame', frame_copy)
+
+            print(right, bottom)
+
 
 if __name__ == '__main__':
     main()

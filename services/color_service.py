@@ -19,7 +19,7 @@ class ColorService:
 
     def _get_color_coverage(self, img, color_ranges: [ColorRange]):
         output = self.__get_img_in_color_ranges(img, color_ranges)
-        total_pixel_count = output.size
+        total_pixel_count = np.prod(img.shape[:2])
         color_pixel_count = np.count_nonzero(output)
         return color_pixel_count / total_pixel_count
 
@@ -56,6 +56,6 @@ class ColorService:
             current_mask = cv2.inRange(hsv, color_range.lower_color, color_range.upper_color)
             mask = cv2.bitwise_or(mask, current_mask)
 
-        result_img = cv2.bitwise_and(img, img, mask=mask)
+        # result_img = cv2.bitwise_and(img, img, mask=mask)
 
-        return result_img
+        return mask
