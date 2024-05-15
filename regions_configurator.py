@@ -47,6 +47,7 @@ def main():
     # ColorService.generate_color_palette(0, 179, 0, 255, 0, 255, 100)
     started = False
     frames = {}
+    frame_count=0
     while True:
         grabbed, frame = cap.read()
         if not grabbed:
@@ -58,8 +59,11 @@ def main():
 
             if orientation not in frames:
                 frames[orientation] = frame
+                # frame_path = os.path.join('template_frames', f'{orientation}.jpg')
+                # cv2.imwrite(frame_path, frame)
+                frame_count += 1
 
-            if orientation == Orientation.LEFT_EDGE:
+            if orientation == Orientation.LEFT_EDGE or frame_count >= 7:
                 print("finish")
                 break
 
@@ -89,7 +93,7 @@ def main():
         region = "edge_regions" if orientation.name.endswith("EDGE") else "side_regions"
         cube_positions = side_region_cube_positions if orientation.name.endswith("EDGE") else edge_region_cube_positions
 
-        template_frames = cv2.imread(os.path.join('template_frames', f'{orientation}.jpg'))
+        template_frames = cv2.imread(os.path.join('test_frames', f'{orientation}.jpg'))
         cv2.imshow('template_frames', template_frames)
         cv2.imshow('frame', frame)
         print(f"-------------{orientation}-----------------")
@@ -97,7 +101,6 @@ def main():
             print(cube_position)
             cv2.setMouseCallback('frame', accept_cube_position, {'frame': frame, "config_path": 'config.json',
                                                                  'region': region, 'cube_position': cube_position})
-
             cv2.waitKey()
         cv2.waitKey()
 
