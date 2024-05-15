@@ -40,8 +40,6 @@ def main():
 
         frame_copy = frame.copy()
         for orientation, regions in config.quadrant.regions.items():
-            if orientation != Orientation.RIGHT_EDGE:
-                continue
             for region in regions:
                 x1 = int((region.coord[0] + right - region.width / 2))
                 y1 = int((region.coord[1] + bottom - region.height / 2))
@@ -67,8 +65,6 @@ def main():
 
             frame_copy = frame.copy()
             for orientation, regions in config.quadrant.regions.items():
-                if orientation != Orientation.RIGHT_EDGE:
-                    continue
                 for region in regions:
                     x1 = int((region.coord[0] + right - region.width / 2))
                     y1 = int((region.coord[1] + bottom - region.height / 2))
