@@ -16,21 +16,31 @@ def draw_rectangle(event, x, y, frame):
     print((x, y))
 
 
-def update_json_file(file_path, region, region_name, new_value):
+def update_json_file(file_path, region, region_name, new_value, behind):
     with open(file_path, 'r+') as file:
         data = json.load(file)
-        for region in data['cubes'][region][region_name]:
-            region['coord'] = new_value
-        file.seek(0)
-        json.dump(data, file, indent=4)
-        file.truncate()
+        cubes = data['cubes']
+        if region in cubes and region_name in cubes[region]:
+            region_list = cubes[region][region_name]
+            for i, region_data in enumerate(region_list):
+                print(i)
+                if i == 0 and not behind:
+                    region_data['coord'] = new_value
+                elif i!=0 and behind:
+                    region_data['coord'] = new_value
+                file.seek(0)
+                json.dump(data, file, indent=4)
+                file.truncate()
 
 
 def accept_cube_position(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         draw_rectangle(event, x, y, param['frame'])
-        update_json_file(param['config_path'], param['region'], param['cube_position'], [x, y])
-
+        update_json_file(param['config_path'], param['region'], param['cube_position'], [x, y], param['behind'])
+def remove_suffix(text, suffix):
+    if text.endswith(suffix):
+        return text[:-len(suffix)]
+    return text
 def main():
     config = Config.from_json('config.json')
     color_service = ColorService()
@@ -63,7 +73,7 @@ def main():
                 # cv2.imwrite(frame_path, frame)
                 frame_count += 1
 
-            if orientation == Orientation.LEFT_EDGE or frame_count >= 7:
+            if frame_count >= 2:
                 print("finish")
                 break
 
@@ -73,9 +83,13 @@ def main():
         "bottom_front_left",
         "bottom_front_right",
         "top_front_left",
+        "top_front_left_behind",
         "top_front_right",
+        "top_front_right_behind",
         "bottom_back_left",
-        "bottom_back_right"
+        "bottom_back_left_behind",
+        "bottom_back_right",
+        "bottom_back_right_behind"
     ]
 
     edge_region_cube_positions = [
@@ -88,19 +102,24 @@ def main():
         "top_back_right",
         "bottom_back_right"
     ]
-
     for orientation, frame in frames.items():
         region = "edge_regions" if orientation.name.endswith("EDGE") else "side_regions"
-        cube_positions = side_region_cube_positions if orientation.name.endswith("EDGE") else edge_region_cube_positions
+        #cube_positions = side_region_cube_positions if orientation.name.endswith("EDGE") else edge_region_cube_positions
+        cube_positions = side_region_cube_positions
 
-        template_frames = cv2.imread(os.path.join('test_frames', f'{orientation}.jpg'))
-        cv2.imshow('template_frames', template_frames)
+
         cv2.imshow('frame', frame)
         print(f"-------------{orientation}-----------------")
         for cube_position in cube_positions:
             print(cube_position)
+            behind = True if cube_position.endswith("behind") else False
+            print(behind)
+            template_frames = cv2.imread(os.path.join('test_frames', f'{cube_position}.jpg'))
+            if behind:
+                cube_position = remove_suffix(cube_position, "_behind")
+            cv2.imshow('template_frames', template_frames)
             cv2.setMouseCallback('frame', accept_cube_position, {'frame': frame, "config_path": 'config.json',
-                                                                 'region': region, 'cube_position': cube_position})
+                                                                 'region': region, 'cube_position': cube_position, 'behind':behind})
             cv2.waitKey()
         cv2.waitKey()
 
