@@ -68,11 +68,13 @@ def main():
             logging.info(f'Send was successful: {success}')
 
             if '?' not in cube_service.cubes.values():
+                logging.info("Cube config complete")
                 break
 
             config.quadrant.regions.pop(orientation)
         else:
             if not cap.grab():
+                logging.error("Failed to grab frame")
                 break
 
     logging.info(f'Finished analyzing cube config')
