@@ -52,6 +52,7 @@ def main():
         if frame_count % config.frame_frequency == 0:
             grabbed, frame = cap.read()
             if not grabbed:
+                logging.error("Failed to grab frame")
                 break
 
             orientation = quadrant_service.get_orientation(frame)
