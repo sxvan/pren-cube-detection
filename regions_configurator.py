@@ -1,6 +1,8 @@
-import cv2
-import pickle
 import os
+import re
+import sys
+
+import cv2
 import json
 from models.config.config import Config
 from models.orientation import Orientation
@@ -16,7 +18,7 @@ def draw_rectangle(event, x, y, frame):
     print((x, y))
 
 
-def update_json_file(file_path, region, region_name, new_value, behind):
+def update_json_file_side_regions(file_path, region, region_name, new_value, behind):
     with open(file_path, 'r+') as file:
         data = json.load(file)
         cubes = data['cubes']
@@ -26,8 +28,35 @@ def update_json_file(file_path, region, region_name, new_value, behind):
                 print(i)
                 if i == 0 and not behind:
                     region_data['coord'] = new_value
-                elif i!=0 and behind:
+                elif i != 0 and behind:
                     region_data['coord'] = new_value
+                file.seek(0)
+                json.dump(data, file, indent=4)
+                file.truncate()
+
+
+def update_json_file_edge_regions(file_path, region, region_name, new_value, behind, behind_number):
+    with open(file_path, 'r+') as file:
+        data = json.load(file)
+        cubes = data['cubes']
+        if region in cubes and region_name in cubes[region]:
+            region_list = cubes[region][region_name]
+            for i, region_data in enumerate(region_list):
+                print(i)
+                if i == 0 and not behind:
+                    region_data['coord'] = new_value
+                elif behind_number == 1 and 0 < i <= 5 and behind:
+                    region_data['coord'] = new_value
+                    cubes[region]['bottom_back_left'][2]['coord'] = new_value
+                elif behind_number == 2 and 5 < i <= 10 and behind:
+                    region_data['coord'] = new_value
+                    cubes[region]['bottom_back_left'][3]['coord'] = new_value
+                elif behind_number == 3 and i == 11 and behind:
+                    region_data['coord'] = new_value
+                    cubes[region]['bottom_back_left'][0]['coord'] = new_value
+                elif behind_number == 4 and i == 12 and i <= 10 and behind:
+                    region_data['coord'] = new_value
+                    cubes[region]['bottom_back_left'][1]['coord'] = new_value
                 file.seek(0)
                 json.dump(data, file, indent=4)
                 file.truncate()
@@ -36,11 +65,23 @@ def update_json_file(file_path, region, region_name, new_value, behind):
 def accept_cube_position(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         draw_rectangle(event, x, y, param['frame'])
-        update_json_file(param['config_path'], param['region'], param['cube_position'], [x, y], param['behind'])
+        if param['edge']:
+            update_json_file_edge_regions(param['config_path'], param['region'], param['cube_position'], [x, y],
+                                          param['behind'], param['behind_number'])
+        else:
+            update_json_file_side_regions(param['config_path'], param['region'], param['cube_position'], [x, y],
+                                          param['behind'])
+
+
 def remove_suffix(text, suffix):
-    if text.endswith(suffix):
-        return text[:-len(suffix)]
+    # Use a regular expression to match suffix with or without a number
+    pattern = re.compile(re.escape(suffix) + r'(_\d+)?$')
+    match = pattern.search(text)
+    if match:
+        return text[:match.start()]
     return text
+
+
 def main():
     config = Config.from_json('config.json')
     color_service = ColorService()
@@ -57,7 +98,7 @@ def main():
     # ColorService.generate_color_palette(0, 179, 0, 255, 0, 255, 100)
     started = False
     frames = {}
-    frame_count=0
+    frame_count = 0
     while True:
         grabbed, frame = cap.read()
         if not grabbed:
@@ -91,37 +132,46 @@ def main():
         "bottom_back_right",
         "bottom_back_right_behind"
     ]
-
     edge_region_cube_positions = [
         "top_front_left",
         "bottom_front_left",
         "top_back_left",
         "bottom_back_left",
         "top_front_right",
+        "top_front_right_behind_1",
+        "top_front_right_behind_2",
+        "top_front_right_behind_3",
+        "top_front_right_behind_4",
         "bottom_front_right",
         "top_back_right",
         "bottom_back_right"
     ]
     for orientation, frame in frames.items():
-        region = "edge_regions" if orientation.name.endswith("EDGE") else "side_regions"
-        #cube_positions = side_region_cube_positions if orientation.name.endswith("EDGE") else edge_region_cube_positions
-        cube_positions = side_region_cube_positions
-
+        region, cube_positions, frames_file, edge = (
+        "edge_regions", edge_region_cube_positions, "template_frames_edge", True) if \
+            orientation.name.endswith("EDGE") else (
+        "side_regions", side_region_cube_positions, "template_frames_side", False)
 
         cv2.imshow('frame', frame)
         print(f"-------------{orientation}-----------------")
         for cube_position in cube_positions:
             print(cube_position)
-            behind = True if cube_position.endswith("behind") else False
+            behind = True if re.search(r'behind(_\d+)?$', cube_position) else False
             print(behind)
-            template_frames = cv2.imread(os.path.join('test_frames', f'{cube_position}.jpg'))
+            template_frames = cv2.imread(os.path.join(frames_file, f'{cube_position}.jpg'))
+            behind_number = sys.maxsize
             if behind:
+                if edge: behind_number = int(cube_position[-1])
                 cube_position = remove_suffix(cube_position, "_behind")
+                print(f"cut: {cube_position}")
             cv2.imshow('template_frames', template_frames)
             cv2.setMouseCallback('frame', accept_cube_position, {'frame': frame, "config_path": 'config.json',
-                                                                 'region': region, 'cube_position': cube_position, 'behind':behind})
+                                                                 'region': region, 'cube_position': cube_position,
+                                                                 'behind': behind,
+                                                                 'edge': edge, 'behind_number': behind_number})
             cv2.waitKey()
         cv2.waitKey()
+
 
 if __name__ == '__main__':
     main()
