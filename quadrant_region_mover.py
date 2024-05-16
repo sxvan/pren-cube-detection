@@ -29,7 +29,6 @@ def main():
                            f'@{camera_profile.ip_address}/{camera_profile.url}'
                            f'?streamprofile={camera_profile.profile}')
 
-    # ColorService.generate_color_palette(0, 179, 0, 255, 0, 255, 100)
     right = 0
     bottom = 0
     while True:

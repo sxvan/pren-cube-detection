@@ -22,12 +22,12 @@ def main():
     cube_service = CubeService(region_service, config.cubes.side_regions, config.cubes.edge_regions,
                                config.cubes.colors)
     pren_service = PrenService(config.pren_api.base_url, config.pren_api.team, config.pren_api.datetime_format)
-    # control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
-    #                                           config.control_unit.uart.port, config.control_unit.uart.baud_rate,
-    #                                           config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
-    #                                           config.control_unit.uart.retry_delay_ms,
-    #                                           config.control_unit.uart.start_character,
-    #                                           config.control_unit.uart.crc8_poly)
+    control_unit_service = ControlUnitService(config.control_unit.ready_pin, config.control_unit.start_pin,
+                                              config.control_unit.uart.port, config.control_unit.uart.baud_rate,
+                                              config.control_unit.uart.encoding, config.control_unit.uart.max_retries,
+                                              config.control_unit.uart.retry_delay_ms,
+                                              config.control_unit.uart.start_character,
+                                              config.control_unit.uart.crc8_poly)
 
     logging.info('Opening video capture')
     camera_profile = config.camera_profile
@@ -37,11 +37,11 @@ def main():
     logging.info('Opened video capture')
 
     logging.info('Sending ready signal')
-    # control_unit_service.send_ready_signal()
+    control_unit_service.send_ready_signal()
     logging.info('Waiting for start signal')
-    # control_unit_service.wait_for_start_signal()
+    control_unit_service.wait_for_start_signal()
     logging.info('Sending unready signal')
-    # control_unit_service.send_unready_signal()
+    control_unit_service.send_unready_signal()
 
     logging.info('Sending start signal to pren endpoint')
     pren_service.start()  # when to start? can capture be before start?
@@ -52,6 +52,7 @@ def main():
         if frame_count % config.frame_frequency == 0:
             grabbed, frame = cap.read()
             if not grabbed:
+                logging.error("Failed to grab frame")
                 break
 
             orientation = quadrant_service.get_orientation(frame)
@@ -64,20 +65,27 @@ def main():
             cube_service.detect_cubes(frame, orientation)
 
             logging.info(f'Sending cube config')
-            # control_unit_service.send_cube_config(cube_service.cubes)
+            success = control_unit_service.send_cube_config(cube_service.cubes)
+            logging.info(f'Send was successful: {success}')
 
             if '?' not in cube_service.cubes.values():
+                logging.info("Cube config complete")
                 break
 
             config.quadrant.regions.pop(orientation)
         else:
             if not cap.grab():
+                logging.error("Failed to grab frame")
                 break
 
+    logging.info(f'Finished analyzing cube config')
     pren_service.submit(cube_service.cubes)
 
-    # control_unit_service.wait_for_end_signal()
+    logging.info(f'Waiting for end signal')
+    control_unit_service.wait_for_end_signal()
+    logging.info(f'Received end signal')
 
+    logging.info(cube_service.cubes)
     pren_service.end()
     print(pren_service.get().content)
 
