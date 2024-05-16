@@ -42,7 +42,7 @@ def main():
             break
 
         orientation = quadrant_service.get_orientation(frame)
-        if not orientation:
+        if not orientation or orientation != Orientation.RIGHT:
             continue
 
         print(orientation)

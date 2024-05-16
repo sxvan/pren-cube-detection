@@ -29,42 +29,31 @@ class CubeService:
             for region in regions:
                 color_name = self._region_service.get_region_color_name(img, region, self._colors)
 
-                # print(normalized_cube_position)
-                # if color_name:
-                #     print(color_name)
-                # else:
-                #     print('None')
-                #
-                # x1 = int((region.coord[0] - region.width / 2))
-                # y1 = int((region.coord[1] - region.height / 2))
-                # x2 = int(x1 + region.width)
-                # y2 = int(y1 + region.height)
-                # cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 1)
-                # cv2.imshow('img', img)
-                # cv2.waitKey()
-
                 if region.only_missing and color_name != '':
                     continue
 
                 if (self._check_when_missing(orientation, region.when_missing) and
                         self._check_when_different(orientation, region.when_different, color_name)):
-                    self.cubes[normalized_cube_position] = color_name
-                    if color_name == '' and normalized_cube_position.value < 5:
-                        self.cubes[CubePosition(normalized_cube_position.value + 4)] = ''
+                    self.set_cube(normalized_cube_position, color_name)
                     break
 
-                self._regions_to_recheck[normalized_cube_position].append((region.when_missing,
+                self._regions_to_recheck[normalized_cube_position].append((orientation, region.when_missing,
                                                                           region.when_different, color_name))
 
         for normalized_cube_position, region_results in self._regions_to_recheck.items():
             if self.cubes[normalized_cube_position] != '?':
                 continue
 
-            for when_missing, when_different, color_name in region_results:
+            for orientation, when_missing, when_different, color_name in region_results:
                 if (self._check_when_missing(orientation, when_missing) and
                         self._check_when_different(orientation, when_different, color_name)):
-                    self.cubes[normalized_cube_position] = color_name
+                    self.set_cube(normalized_cube_position, color_name)
                     break
+
+    def set_cube(self, normalized_cube_position: CubePosition, color_name: str):
+        self.cubes[normalized_cube_position] = color_name
+        if color_name == '' and normalized_cube_position.value < 5:
+            self.cubes[CubePosition(normalized_cube_position.value + 4)] = ''
 
     def _get_regions(self, orientation):
         if orientation.value % 90 == 0:
