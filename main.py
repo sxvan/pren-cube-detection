@@ -64,8 +64,8 @@ def main():
             cube_service.detect_cubes(frame, orientation)
 
             logging.info(f'Sending cube config')
-            control_unit_service.send_cube_config(cube_service.cubes)
-            logging.info(f'Sent cube config')
+            success = control_unit_service.send_cube_config(cube_service.cubes)
+            logging.info(f'Send was successful: {success}')
 
             if '?' not in cube_service.cubes.values():
                 break
@@ -78,8 +78,11 @@ def main():
     logging.info(f'Finished analyzing cube config')
     pren_service.submit(cube_service.cubes)
 
+    logging.info(f'Waiting for end signal')
     control_unit_service.wait_for_end_signal()
+    logging.info(f'Received end signal')
 
+    logging.info(cube_service.cubes)
     pren_service.end()
     print(pren_service.get().content)
 

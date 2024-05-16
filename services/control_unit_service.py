@@ -1,3 +1,4 @@
+import logging
 import time
 
 import serial
@@ -52,6 +53,7 @@ class ControlUnitService:
             while not success and number_of_tries < self._max_retries:
                 number_of_tries = number_of_tries + 1
                 ser.write(data_bytes)
+                logging.info(f"Sent {data_bytes}")
 
                 try:
                     received_byte = ser.read(1).decode(self._encoding)
