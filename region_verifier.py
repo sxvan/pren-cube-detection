@@ -39,10 +39,10 @@ def main():
         grabbed, frame = cap.read()
 
         if not grabbed:
-            break
+            continue
 
         orientation = quadrant_service.get_orientation(frame)
-        if not orientation or orientation != Orientation.RIGHT:
+        if not orientation:
             continue
 
         print(orientation)

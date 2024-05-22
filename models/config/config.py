@@ -8,8 +8,9 @@ from models.config.quadrant_config import QuadrantConfig
 
 
 class Config:
-    def __init__(self, frame_frequency, camera_profile, pren_api, control_unit, cubes, quadrant):
+    def __init__(self, frame_frequency, max_consecutive_fails, camera_profile, pren_api, control_unit, cubes, quadrant):
         self.frame_frequency = frame_frequency
+        self.max_consecutive_fails = max_consecutive_fails
         self.camera_profile = CameraProfileConfig(**camera_profile)
         self.pren_api = PrenApiConfig(**pren_api)
         self.control_unit = ControlUnitConfig(**control_unit)

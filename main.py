@@ -2,7 +2,6 @@ import cv2
 import logging
 
 from models.config.config import Config
-from models.orientation import Orientation
 from services.color_service import ColorService
 from services.control_unit_service import ControlUnitService
 from services.cube_service import CubeService
@@ -47,13 +46,17 @@ def main():
     pren_service.start()  # when to start? can capture be before start?
 
     frame_count = 0
-    while True:
+    consecutive_fails = 0
+    while True and consecutive_fails < config.max_consecutive_fails:
         frame_count += 1
         if frame_count % config.frame_frequency == 0:
             grabbed, frame = cap.read()
             if not grabbed:
+                consecutive_fails += 1
                 logging.error("Failed to grab frame")
-                break
+                continue
+
+            consecutive_fails = 0
 
             orientation = quadrant_service.get_orientation(frame)
             if orientation is None:
@@ -75,7 +78,6 @@ def main():
             config.quadrant.regions.pop(orientation)
         else:
             if not cap.grab():
-                logging.error("Failed to grab frame")
                 break
 
     logging.info(f'Finished analyzing cube config')

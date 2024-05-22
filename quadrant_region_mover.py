@@ -37,6 +37,10 @@ def main():
         if not grabbed:
             break
 
+        orientation = quadrant_service.get_orientation(frame)
+        if not orientation:
+            continue
+
         frame_copy = frame.copy()
         for orientation, regions in config.quadrant.regions.items():
             for region in regions:
