@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import logging
 
@@ -53,6 +55,7 @@ def main():
             grabbed, frame = cap.read()
             if not grabbed:
                 consecutive_fails += 1
+                time.sleep(1)
                 logging.error("Failed to grab frame")
                 continue
 
