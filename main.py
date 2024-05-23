@@ -1,5 +1,3 @@
-import time
-
 import cv2
 import logging
 
@@ -49,15 +47,19 @@ def main():
 
     frame_count = 0
     consecutive_fails = 0
-    while True and consecutive_fails < config.max_consecutive_fails:
+    while True:
         frame_count += 1
         if frame_count % config.frame_frequency == 0:
             grabbed, frame = cap.read()
-            # if not grabbed:
-            #     consecutive_fails += 1
-            #     time.sleep(1)
-            #     logging.error("Failed to grab frame")
-            #     continue
+            if not grabbed:
+                consecutive_fails += 1
+                if consecutive_fails >= config.max_consecutive_fails:
+                    cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
+                           f'@{camera_profile.ip_address}/{camera_profile.url}'
+                           f'?streamprofile={camera_profile.profile}')
+                    logging.error("Reopened stream")
+                logging.error("Failed to grab frame")
+                continue
 
             consecutive_fails = 0
 
