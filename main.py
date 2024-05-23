@@ -53,11 +53,11 @@ def main():
         frame_count += 1
         if frame_count % config.frame_frequency == 0:
             grabbed, frame = cap.read()
-            if not grabbed:
-                consecutive_fails += 1
-                time.sleep(1)
-                logging.error("Failed to grab frame")
-                continue
+            # if not grabbed:
+            #     consecutive_fails += 1
+            #     time.sleep(1)
+            #     logging.error("Failed to grab frame")
+            #     continue
 
             consecutive_fails = 0
 
