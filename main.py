@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import logging
 
@@ -53,6 +55,7 @@ def main():
             grabbed, frame = cap.read()
             if not grabbed:
                 consecutive_fails += 1
+                time.sleep(config.fetch_delay_ms / 1000)
                 if consecutive_fails >= config.max_consecutive_fails:
                     cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
                            f'@{camera_profile.ip_address}/{camera_profile.url}'
