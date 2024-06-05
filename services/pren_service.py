@@ -1,3 +1,4 @@
+import threading
 from datetime import datetime
 from models.cube_position import CubePosition
 import requests
@@ -30,6 +31,11 @@ class PrenService:
 
         response = requests.post(url, headers=headers)
         return response
+
+    def start_thread(self):
+        thread = threading.Thread(target=self.start)
+        thread.daemon = True  # Ensure the thread will exit when the main program exits
+        thread.start()
 
     def end(self):
         url = self._get_url() + '/end'

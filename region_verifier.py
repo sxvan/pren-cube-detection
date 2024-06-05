@@ -1,3 +1,5 @@
+import time
+
 import cv2
 
 from models.config.config import Config
@@ -41,18 +43,18 @@ def main():
         if not grabbed:
             continue
 
-        orientation = quadrant_service.get_orientation(frame)
-        if not orientation:
-            continue
-
-        print(orientation)
-
-        cube_service.detect_cubes(frame, orientation)
-        print(cube_service.cubes)
+        # orientation = quadrant_service.get_orientation(frame)
+        # if not orientation:
+        #     continue
+        #
+        # print(orientation)
+        #
+        # cube_service.detect_cubes(frame, orientation)
+        # print(cube_service.cubes)
 
         cube_regions = config.cubes.edge_regions
-        if orientation.value % 90 == 0:
-            cube_regions = config.cubes.side_regions
+        # if orientation.value % 90 == 0:
+        #     cube_regions = config.cubes.side_regions
 
         for position, regions in cube_regions.items():
             for region in regions:
@@ -65,7 +67,7 @@ def main():
 
         cv2.imshow('frame', frame)
         cv2.setMouseCallback('frame', draw_rectangle, {'frame': frame})
-        cv2.waitKey()
+        cv2.waitKey(1)
 
 if __name__ == '__main__':
     main()

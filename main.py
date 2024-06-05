@@ -45,7 +45,7 @@ def main():
     control_unit_service.send_unready_signal()
 
     logging.info('Sending start signal to pren endpoint')
-    pren_service.start()  # when to start? can capture be before start?
+    pren_service.start_thread()  # when to start? can capture be before start?
 
     frame_count = 0
     consecutive_fails = 0
