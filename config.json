@@ -31,6 +31,7 @@
     }
   },
   "cubes": {
+    "use_smart_regions": true,
     "side_regions": {
       "top_back_left": [{ "coord": [295, 58], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
       "top_back_right": [{ "coord": [361, 58], "width": 20, "height": 20, "min_color_coverage": 0.7 }],
