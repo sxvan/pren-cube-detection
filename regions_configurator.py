@@ -22,17 +22,30 @@ def update_json_file_side_regions(file_path, region, region_name, new_value, beh
     with open(file_path, 'r+') as file:
         data = json.load(file)
         cubes = data['cubes']
-        if region in cubes and region_name in cubes[region]:
-            region_list = cubes[region][region_name]
-            for i, region_data in enumerate(region_list):
-                print(i)
-                if i == 0 and not behind:
-                    region_data['coord'] = new_value
-                elif i != 0 and behind:
-                    region_data['coord'] = new_value
-                file.seek(0)
-                json.dump(data, file, indent=4)
-                file.truncate()
+
+        def update_region(cubes, region, region_name, new_value, behind):
+            if region in cubes and region_name in cubes[region]:
+                region_list = cubes[region][region_name]
+                for i, region_data in enumerate(region_list):
+                    if i == 0 and not behind:
+                        region_data['coord'] = new_value
+                    elif i != 0 and behind:
+                        region_data['coord'] = new_value
+
+
+        if region_name == 'top_front_left':
+            update_region(cubes, region, 'top_front_left', new_value, behind)
+            update_region(cubes, region, 'bottom_back_left', new_value, behind)
+        if region_name == 'top_front_right':
+            update_region(cubes, region, 'top_front_right', new_value, behind)
+            update_region(cubes, region, 'bottom_back_right', new_value, behind)
+        else:
+            update_region(cubes, region, region_name, new_value, behind)
+
+        file.seek(0)
+        json.dump(data, file, indent=4)
+        file.truncate()
+
 
 
 def update_json_file_edge_regions(file_path, region, region_name, new_value, behind, behind_number):
@@ -54,7 +67,7 @@ def update_json_file_edge_regions(file_path, region, region_name, new_value, beh
                 elif behind_number == 3 and i == 11 and behind:
                     region_data['coord'] = new_value
                     cubes[region]['bottom_back_left'][0]['coord'] = new_value
-                elif behind_number == 4 and i == 12 and i <= 10 and behind:
+                elif behind_number == 4 and i == 12 and behind:
                     region_data['coord'] = new_value
                     cubes[region]['bottom_back_left'][1]['coord'] = new_value
                 file.seek(0)
@@ -126,28 +139,23 @@ def main():
         "top_front_left",
         "top_front_left_behind",
         "top_front_right",
-        "top_front_right_behind",
-        "bottom_back_left",
-        "bottom_back_left_behind",
-        "bottom_back_right",
-        "bottom_back_right_behind"
+        "top_front_right_behind"
     ]
     edge_region_cube_positions = [
         "top_front_left",
         "bottom_front_left",
+        "top_back_right",
+        "bottom_back_right",
+        "bottom_front_right",
         "top_back_left",
-        "bottom_back_left",
         "top_front_right",
         "top_front_right_behind_1",
         "top_front_right_behind_2",
         "top_front_right_behind_3",
-        "top_front_right_behind_4",
-        "bottom_front_right",
-        "top_back_right",
-        "bottom_back_right"
+        "top_front_right_behind_4"
     ]
     for orientation, frame in frames.items():
-        region, cube_positions, frames_file, edge = (
+        region, cube_positions, frames_directory, edge = (
         "edge_regions", edge_region_cube_positions, "template_frames_edge", True) if \
             orientation.name.endswith("EDGE") else (
         "side_regions", side_region_cube_positions, "template_frames_side", False)
@@ -158,7 +166,7 @@ def main():
             print(cube_position)
             behind = True if re.search(r'behind(_\d+)?$', cube_position) else False
             print(behind)
-            template_frames = cv2.imread(os.path.join(frames_file, f'{cube_position}.jpg'))
+            template_frames = cv2.imread(os.path.join(frames_directory, f'{cube_position}.jpg'))
             behind_number = sys.maxsize
             if behind:
                 if edge: behind_number = int(cube_position[-1])
