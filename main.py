@@ -32,15 +32,18 @@ def main():
 
     logging.info('Opening video capture')
     camera_profile = config.camera_profile
-    cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
-                           f'@{camera_profile.ip_address}/{camera_profile.url}'
-                           f'?streamprofile={camera_profile.profile}')
+
     logging.info('Opened video capture')
 
     logging.info('Sending ready signal')
     control_unit_service.send_ready_signal()
     logging.info('Waiting for start signal')
     control_unit_service.wait_for_start_signal()
+
+    cap = cv2.VideoCapture(f'{camera_profile.protocol}://{camera_profile.username}:{camera_profile.password}'
+                           f'@{camera_profile.ip_address}/{camera_profile.url}'
+                           f'?streamprofile={camera_profile.profile}')
+
     logging.info('Sending unready signal')
     control_unit_service.send_unready_signal()
 
